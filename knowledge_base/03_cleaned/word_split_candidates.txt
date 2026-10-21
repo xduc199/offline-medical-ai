@@ -1,0 +1,380 @@
+BAO CAO TU NGHI BI TACH
+So dong tai lieu: 15501
+So ung vien: 94
+
+1. Dong 6: EMERGENCY + CARE -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: BASIC EMERGENCY CARE: Approach to the acutely ill and injured
+
+2. Dong 17: EMERGENCY + CARE -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: BASIC EMERGENCY CARE
+
+3. Dong 24: emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Basic emergency care: approach to the acutely ill and injured
+
+4. Dong 42: emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Suggested citation. Basic emergency care: approach to the acutely ill and injured. Geneva: World Health
+
+5. Dong 100: Peter + S -> peters
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Kilindimo, Josephine Lazaro, Wendy Lukwambe, Peter S. Mabula, Deogratius Mally, Nyakanda
+
+6. Dong 101: Felix + D -> felixd
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Marwa, Juma Mbugi, Felix D. Mlay, Victoria Mlele, Brittany Murray, Kissa Mwampagama, Meera
+
+7. Dong 102: Catherine + R -> catheriner
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Nariadhara, Catherine R. Shari, Patrick J. Shao, Shahzmah Suleman, Renatus Tarimo, Tito William.
+
+8. Dong 143: EMERGENCY + CARE -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: WHO BASIC EMERGENCY CARE [SKILLS].  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  . 141
+
+9. Dong 146: Emergency + Care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Basic Emergency Care Quick Cards . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  215
+
+10. Dong 167: emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: countries result from conditions that could be addressed by emergency care.
+
+11. Dong 170: Emergency + Care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: developed the Basic Emergency Care (BEC) course for frontline providers who manage acute
+
+12. Dong 174: Emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Emergency care providers must respond to ‘undifferentiated’ patients, those with acute
+
+13. Dong 209: emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: educational institutions, professional societies and others to train emergency care providers
+
+14. Dong 239: emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: emergency care even before it progresses to any of the key acute presentations listed above.
+
+15. Dong 342: emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: medications provide a foundation for initial emergency care, but almost every condition
+
+16. Dong 350: emergency + care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: disposition – or next step of care – for the acutely ill patient is a vital part of emergency care.
+
+17. Dong 452: be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Objectives: A list of things participants should be able to do by the end of the course.
+
+18. Dong 488: Emergency + Care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: full, the Basic Emergency Care course requires completion of ALL components listed below.
+
+19. Dong 489: Emergency + Care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Pre-test. Before receiving the Basic Emergency Care course workbook, participants should
+
+20. Dong 681: Gluc + ose -> glucose
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: •  Gluc ose administration
+
+21. Dong 919: look + t -> lookt
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: look t
+
+22. Dong 972: is + able -> isable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: f the patient is able to cough or
+
+23. Dong 1242: en + tire -> entire
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: • Examine the en tire body for
+
+24. Dong 2139: INF + ANTS -> infants
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: • INF ANTS AND CHILDREN HAVE DIFFICULTY MAINTAINING TEMPERATURE and can very quickly
+
+25. Dong 2150: provider + able -> providerable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: handover to a provider able to provide advanced paediatric care.
+
+26. Dong 2533: Dir + ect -> direct
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: •  Dir ect pressure for haemorrhage control,
+
+27. Dong 2817: pale + e -> palee
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: pale e
+
+28. Dong 3022: on + e -> one
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu, phan_cuoi_giong_hau_to
+   Noi dung: Unstable pelvis on e
+
+29. Dong 3041: Air + way -> airway
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: A Air way conditions
+
+30. Dong 3078: be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: may not be able to protect their airways and
+
+31. Dong 3092: Brea + thing -> breathing
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: B Brea thing conditions
+
+32. Dong 3246: Cir + culation -> circulation
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: C Cir culation conditions
+
+33. Dong 3291: are + able -> areable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: REMEMBER... Children and young people are able to maintain a normal blood pressure until they
+
+34. Dong 3317: fluid + t -> fluidt
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: • Give IV fluid t
+
+35. Dong 3329: Disabilit + y -> disability
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu, phan_cuoi_giong_hau_to
+   Noi dung: D Disabilit y conditions
+
+36. Dong 3348: Bruising + t -> bruisingt
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Bruising t
+
+37. Dong 3439: be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Use the SAMPLE approach to obtain a history. Remember that you may be able to obtain
+
+38. Dong 3546: less + able -> lessable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: less able than adults to report events, even major events like being hit by a vehicle. Always
+
+39. Dong 3619: build + up -> buildup
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: release a muscle by-product (called myoglobin) that can build up and damage the kidneys.
+
+40. Dong 3690: Loose + t -> looset
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: • Loose t
+
+41. Dong 3928: Bruising + t -> bruisingt
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Bruising t
+
+42. Dong 4912: less + able -> lessable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Young children may be less able than adults to report events, even major events like
+
+43. Dong 4926: are + a -> area
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Head injuries are a common cause of death in children, and children frequently suffer
+
+44. Dong 5373: build + up -> buildup
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: pesticides) can cause fluid to build up in the airways and can cause weakness in the muscles
+
+45. Dong 5728: Unable + t -> unablet
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Unable t
+
+46. Dong 6378: not + able -> notable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Poor perfusion is when the body is not able to get enough oxygen-carrying blood to vital
+
+47. Dong 6420: AL + WAYS -> always
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung:  AL WAYS START WITH THE ABCDE APPROACH, intervening as needed.
+
+48. Dong 6759: Unable + t -> unablet
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Unable t
+
+49. Dong 7579: plac + ement -> placement
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: A. Chest tube plac ement
+
+50. Dong 7635: Glasgo + w -> glasgow
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung:  Glasgo w Coma Scale
+
+51. Dong 7717: AL + WAYS -> always
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung:  AL WAYS START WITH THE ABCDE APPROACH, intervening as needed.
+
+52. Dong 7780: Ho + w -> how
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung:  Ho w does the current condition compare to baseline mental status?
+
+53. Dong 8356: Bruising + t -> bruisingt
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Bruising t
+
+54. Dong 8830: EMERGENCY + CARE -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: WHO BASIC EMERGENCY CARE
+
+55. Dong 10652: be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: To be used with patients with altered mental status who may not be able to protect the airway,
+
+56. Dong 10728: or + able -> orable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: not perform the manoeuvres described below if the person is audibly coughing and/or able to
+
+57. Dong 10768: Ab + dominal -> abdominal
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Ab dominal thrusts for choking adult  Chest thrusts for chok ing in late pregnancy
+
+58. Dong 10813: Check + t -> checkt
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Check t
+
+59. Dong 10938: Be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Be able to give the indication for abdominal thrusts (the
+
+60. Dong 11150: NE + VER -> never
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: – NE VER put a non-rebreather facemask on before it is connected to oxygen. A true non-
+
+61. Dong 11303: build + up -> buildup
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: build up, leading to a tension pneumothorax. Remove the dressing completely if there
+
+62. Dong 11629: Explain + t -> explaint
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Explain t
+
+63. Dong 11831: Difficult + y -> difficulty
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu, phan_cuoi_giong_hau_to
+   Noi dung: • Difficult y in breathing with crackles on chest exam
+
+64. Dong 11836: Unable + t -> unablet
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Unable t
+
+65. Dong 12059: min + or -> minor
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: by 5/min and pulse rate increases by 15/min or lung crackles develop):
+
+66. Dong 12362: are + fully -> arefully
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: lert. People who are fully awake and interactive (even if not fully oriented) are alert.
+
+67. Dong 12640: Bandages + t -> bandagest
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Bandages t
+
+68. Dong 12889: Haemor + rhage -> haemorrhage
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: • Haemor rhage control: stop bleeding as above.
+
+69. Dong 13043: or + D -> ord
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Head (A or D) 10% 9% 7% 6%
+
+70. Dong 13044: or + E -> ore
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Thigh (B or E) 3% 3% 4% 5%
+
+71. Dong 13275: Emergency + Care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Table: Medications used in the Basic Emergency Care course
+
+72. Dong 13426: butt + ocks -> buttocks
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: • Hold the butt ocks together for a few minutes.
+
+73. Dong 13462: of + D -> ofd
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: 25–50 ml IV of D50, or 125–250 ml IV of D10
+
+74. Dong 13704: be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Remember: child must be able to seal mouth
+
+75. Dong 13807: pr + ovider -> provider
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung:  Specific things the new pr ovider should prepare for:
+
+76. Dong 13813: cautions + r -> cautionsr
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: – cautions r
+
+77. Dong 14051: be + low -> below
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: The level of fluid in the body. It can be low (dehydration), normal, or high (fluid overload and/
+
+78. Dong 14330: Emergency + Care -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: Basic Emergency Care
+
+79. Dong 14458: breathing + e -> breathinge
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: • Increased breathing eﬀ  ort (fast breathing, nasal /f_l  aring ,
+
+80. Dong 14703: medication + e -> medicatione
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Facial swelling Severe allergic reaction, medication eﬀ  ect
+
+81. Dong 14738: pleural + e -> pleurale
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: History of tuberculosis or malignancy Pericardial tamponade, pleural eﬀ  usion
+
+82. Dong 14753: medication + e -> medicatione
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Facial swelling Severe allergic reaction, medication eﬀ  ect
+
+83. Dong 14788: pleural + e -> pleurale
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: History of tuberculosis or malignancy Pericardial tamponade, pleural eﬀ  usion
+
+84. Dong 14849: breathing + e -> breathinge
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: • Increased breathing eﬀ  ort (chest indrawing/retractions)
+
+85. Dong 14861: adrenaline + e -> adrenalinee
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Salbutamol and IM adrenaline eﬀ  ects last for about 3 hours, and life-threatening symptoms may recur. Monitor closely, always
+
+86. Dong 14927: breathing + e -> breathinge
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: • Increased breathing eﬀ  ort (chest indrawing/retractions)
+
+87. Dong 14939: adrenaline + e -> adrenalinee
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Salbutamol and IM adrenaline eﬀ  ects last for about 3 hours, and life-threatening symptoms may recur. Monitor closely, always
+
+88. Dong 15105: be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: • Young children may not be able to
+
+89. Dong 15265: be + able -> beable
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: Patients with AMS who may not be able to protect the airway should never be left alone. Monitor closely and give direct
+
+90. Dong 15313: of + D -> ofd
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: 25–50 ml IV of D50, or 125–250 ml IV of D10
+
+91. Dong 15315: of + D -> ofd
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: 5 ml/kg IV of D10 (PREFERRED)
+
+92. Dong 15316: of + D -> ofd
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: 2 ml/kg IV of D25
+
+93. Dong 15317: of + D -> ofd
+   Dau hieu: phan_cuoi_giong_hau_to
+   Noi dung: 1 ml/kg IV of D50
+
+94. Dong 15501: EMERGENCY + CARE -> emergencycare
+   Dau hieu: tu_noi_da_xuat_hien_trong_tai_lieu
+   Noi dung: BASIC EMERGENCY CARE: Approach to the acutely ill and injured
+

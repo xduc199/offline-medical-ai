@@ -1,0 +1,60 @@
+{
+  "model": "qwen2.5:3b",
+  "model_digest": "357c53fb659c",
+  "model_details": "Qwen2.5 3.1B Q4_K_M via local Ollama",
+  "cleaned_sha256": "84bc1664880dd7bbe6eaf55d60eedb92038ea8b030f38121a927c485a991f9a9",
+  "test_mode": "single-turn closed-context smoke test; temperature=0, seed=42",
+  "system_prompt": "You are evaluating a medical-document question-answering model. Treat the supplied excerpt as the only source of truth. Do not use outside medical knowledge or infer missing details. If the excerpt does not answer, explicitly say it is not stated. Answer concisely.",
+  "cases": [
+    {
+      "id": "T01 pediatric danger signs",
+      "answer": "• Signs of airway obstruction (unable to swallow saliva/\ndrooling or stridor)\n• Increased breathing effort (fast breathing, nasal flaring,\ngrunting, chest indrawing or retractions)\n• Cyanosis (blue colour of the skin, especially at the lips and\nfingertips)\n• Altered mental status (including lethargy or unusual\nsleepiness, confusion, disorientation)",
+      "seconds": 5.44,
+      "eval_count": 83,
+      "prompt_eval_count": 235
+    },
+    {
+      "id": "T02 pediatric respiratory range",
+      "answer": "25–50 breaths per minute",
+      "seconds": 0.17,
+      "eval_count": 10,
+      "prompt_eval_count": 144
+    },
+    {
+      "id": "T03 naloxone regimen",
+      "answer": "Single IV dose: 100 mcg\nSingle IM dose: 400 mcg\nRepeat interval: every 5 minutes",
+      "seconds": 0.4,
+      "eval_count": 30,
+      "prompt_eval_count": 176
+    },
+    {
+      "id": "T04 snakebite actions",
+      "answer": "Immobilize extremity. Send picture of snake with patient. Call for anti-venom if relevant.",
+      "seconds": 0.31,
+      "eval_count": 23,
+      "prompt_eval_count": 142
+    },
+    {
+      "id": "T05 burn-depth assessment",
+      "answer": "The burn-depth assessment maneuver involves gently pressing two fingertips onto the burn for 3-4 seconds to assess capillary refill. The speed of capillary refill indicates the burn depth: faster refill suggests a superficial burn, while slower refill suggests a deeper burn.",
+      "seconds": 0.69,
+      "eval_count": 52,
+      "prompt_eval_count": 196
+    },
+    {
+      "id": "T06 unsupported-dose abstention",
+      "answer": "Not stated.",
+      "seconds": 0.09,
+      "eval_count": 4,
+      "prompt_eval_count": 157
+    },
+    {
+      "id": "T07 Vietnamese grounded answer",
+      "answer": "Examine the entire body and always consider hidden injuries.",
+      "seconds": 0.2,
+      "eval_count": 12,
+      "prompt_eval_count": 194
+    }
+  ],
+  "cleaned_sha256_after": "84bc1664880dd7bbe6eaf55d60eedb92038ea8b030f38121a927c485a991f9a9"
+}

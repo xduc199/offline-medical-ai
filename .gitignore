@@ -1,0 +1,29 @@
+﻿# Secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.pem
+*.key
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Ollama models - local files, do not commit
+models/blobs/
+models/manifests/
+models/manifests-v2/
+models/metadata/
+
+# Generated databases and vector indexes
+chroma_db/
+vector_db/
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db

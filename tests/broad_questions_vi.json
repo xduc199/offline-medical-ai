@@ -1,0 +1,51 @@
+[
+  {
+    "id": "B01",
+    "question": "Theo tài liệu, tổng quan về xử trí khó thở là gì?",
+    "expected_pdf_pages": [85],
+    "review_for": "Nêu rõ giới hạn nếu không đủ bối cảnh; nguồn có liên quan; không bịa hướng dẫn chung."
+  },
+  {
+    "id": "B02",
+    "question": "Tóm tắt các bước đánh giá người bệnh chấn thương.",
+    "expected_pdf_pages": [49],
+    "review_for": "Tìm đúng phần tiếp cận chấn thương; trình tự và mức đầy đủ; không nhầm đoạn không liên quan."
+  },
+  {
+    "id": "B03",
+    "question": "Theo tài liệu, những dấu hiệu và nguyên nhân nào liên quan đến sốc?",
+    "expected_pdf_pages": [54, 32],
+    "review_for": "Phân biệt phần tài liệu thực sự nêu về dấu hiệu với nguyên nhân; nói rõ nếu nguồn truy xuất không đủ."
+  },
+  {
+    "id": "B04",
+    "question": "Tài liệu hướng dẫn gì về rắn cắn, từ đánh giá đến xử trí?",
+    "expected_pdf_pages": [34],
+    "review_for": "Độ bao phủ các bước và điều kiện; trích dẫn đúng nguồn."
+  },
+  {
+    "id": "B05",
+    "question": "Tổng hợp cách xử trí co giật ở người lớn và trẻ em theo tài liệu.",
+    "expected_pdf_pages": [33],
+    "review_for": "Không gộp hướng dẫn hai nhóm tuổi nếu nguồn không hỗ trợ; nêu rõ phần thiếu."
+  },
+  {
+    "id": "B06",
+    "question": "Tài liệu trình bày những bước đánh giá ban đầu người bệnh cấp cứu nào?",
+    "expected_pdf_pages": [48, 49],
+    "review_for": "Tìm được đúng nội dung tổng quan; giữ đúng thứ tự nếu tài liệu nêu thứ tự."
+  },
+  {
+    "id": "B07",
+    "question": "Tóm tắt các nội dung chính về bỏng trong tài liệu.",
+    "expected_pdf_pages": [52],
+    "review_for": "Không làm phẳng hoặc diễn giải sơ đồ; nêu phạm vi nguồn truy xuất và các điểm được trích dẫn."
+  },
+  {
+    "id": "B08",
+    "question": "Theo tài liệu, cần đánh giá và xử trí người bệnh bị chảy máu như thế nào?",
+    "expected_pdf_pages": [],
+    "expect_caution": true,
+    "review_for": "Nhận ra cần thêm bối cảnh nếu câu hỏi quá rộng; không đưa khuyến nghị ngoài đoạn nguồn."
+  }
+]

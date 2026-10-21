@@ -1,0 +1,48 @@
+[
+  {
+    "id": "Q01",
+    "question": "Tài liệu liệt kê những dấu hiệu nào của sốc?",
+    "pdf_pages": [
+      32
+    ],
+    "check": "Dủ các dấu hiệu; giữ ngưỡng >3 giây; trích dẫn từng ý."
+  },
+  {
+    "id": "Q02",
+    "question": "Tài liệu nêu những dấu hiệu nào của hạ đường huyết?",
+    "pdf_pages": [
+      33
+    ],
+    "check": "Đủ 6 nhóm dấu hiệu; giữ <3.5 mmol/L; tiếng Việt; có trích dẫn."
+  },
+  {
+    "id": "Q03",
+    "question": "Nếu người bệnh không thể nói hoặc hôn mê do hạ đường huyết, tài liệu nêu cách cho glucose nào?",
+    "pdf_pages": [
+      33
+    ],
+    "check": "Nêu IV nếu có thể; nếu không thể/không có thì niêm mạc má; không đảo điều kiện."
+  },
+  {
+    "id": "Q04",
+    "question": "Tài liệu nêu các bước xử trí rắn cắn nào?",
+    "pdf_pages": [
+      34
+    ],
+    "check": "Bất động chi; chụp ảnh nếu có thể; dịch IV khi có sốc; theo dõi/chuyển giao sớm; không lẫn chữ ngoại ngữ."
+  },
+  {
+    "id": "Q05",
+    "question": "Với người mang thai trên 20 tuần, vì sao tài liệu khuyên nằm nghiêng trái?",
+    "pdf_pages": [
+      73
+    ],
+    "check": "Tử cung có thể ép tĩnh mạch chủ dưới và gây sốc; nghiêng trái; trích dẫn."
+  },
+  {
+    "id": "Q06",
+    "question": "Tài liệu có nêu liều thuốc X cho trẻ sơ sinh không?",
+    "pdf_pages": [],
+    "check": "Không bịa; nói rõ không tìm thấy trong nguồn."
+  }
+]

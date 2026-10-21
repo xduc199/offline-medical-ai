@@ -1,0 +1,279 @@
+--- Line 2533 [Dir ect] ---
+      L2531: 'C'
+      L2532: 'Look for:'
+  >>> L2533: '•'
+      L2534: ' capillar'
+      L2535: 'y refill longer than'
+      L2536: '3 seconds'
+
+--- Line 2817 [pale e] ---
+      L2815: 'resonance with'
+      L2816: 'percussion on affected'
+  >>> L2817: 'side'
+      L2818: ' – may ha'
+      L2819: 've tracheal'
+      L2820: 'shift away from'
+
+--- Line 3022 [on e] ---
+      L3020: '• Give IV fluid t'
+      L3021: 'o improve heart filling. [See SKILLS]'
+  >>> L3022: '• Pa'
+      L3023: 'tients need immediate handover/transfer to'
+      L3024: 'an advanced provider for drainage of the fluid.'
+      L3025: ''
+
+--- Line 3041 [Air way] ---
+      L3039: 'of memory, seizures/'
+      L3040: 'convulsions, vomiting,'
+  >>> L3041: 'headache'
+      L3042: '•'
+      L3043: ' A'
+      L3044: 'ltered mental status or'
+
+--- Line 3092 [Brea thing] ---
+      L3090: 'antibiotics as per local protocol.'
+      L3091: '•'
+  >>> L3092: ' Always check glucose and administer as needed.'
+      L3093: '•'
+      L3094: ' D'
+      L3095: 'o not give food or drink by mouth.'
+
+--- Line 3246 [Cir culation] ---
+      L3244: 'as a pedestrian or a cyclist hit by a vehicle?'
+      L3245: 'Adults and children who are hit by a vehicle while walking or using non-motorized forms of'
+  >>> L3246: 'transport (such as bicycles) are always at high risk of serious injury. Young children may be'
+      L3247: 'less able than adults to report events, even major events like being hit by a vehicle. Always'
+      L3248: 'consider the possibility of unwitnessed trauma in young children. Children and adults'
+      L3249: 'can sustain multiple injuries when hit by a vehicle – both from direct impact to the body,'
+
+--- Line 3317 [fluid t] ---
+      L3315: 'y? Is there severe pain or numbness? Is there dark'
+      L3316: 'urine?'
+  >>> L3317: 'Crush injuries may damage skin, muscle, blood vessels and bone. Damaged muscle can'
+      L3318: 'release a muscle by-product (called myoglobin) that can build up and damage the kidneys.'
+      L3319: 'It is important to know how long a body part was crushed. Even a small crushed area can'
+      L3320: 'cause the release of a dangerous amount of myoglobin (for example when a limb is caught'
+
+--- Line 3329 [Disabilit y] ---
+      L3327: 'injuries (from explosions) can involve all systems of the body, especially the hollow'
+      L3328: 'organs. Common blast injuries include damage to the lungs, intestines and ears. Patients'
+  >>> L3329: 'involved in explosions need to be checked carefully and repeatedly because these injuries'
+      L3330: 'are easily missed. Blasts may also be associated with foreign bodies in the skin and eyes,'
+      L3331: 'burns or chemical injury, and toxin or radiation exposure.'
+      L3332: 'Workbook question 3: Approach to trauma'
+
+--- Line 3348 [Bruising t] ---
+      L3346: 'Always examine the entire body. If the secondary survey identifies a primary survey condition,'
+      L3347: 'STOP AND RETURN IMMEDIATELY TO THE PRIMARY SURVEY to manage it.'
+  >>> L3348: ''
+      L3349: ''
+      L3350: '========================= TRANG PDF 61 ========================='
+      L3351: ''
+
+--- Line 3619 [build up] ---
+      L3617: ' S'
+      L3618: 'calp lacerations and/or skull'
+  >>> L3619: 'fractures'
+      L3620: '•'
+      L3621: ' Bruising t'
+      L3622: 'o head (particularly'
+
+--- Line 3690 [Loose t] ---
+      L3688: '(laceration over a broken bone).'
+      L3689: '•'
+  >>> L3690: ' Upda'
+      L3691: 'te tetanus vaccination.'
+      L3692: '•'
+      L3693: ' Suspec'
+
+--- Line 3928 [Bruising t] ---
+      L3926: 'properly aligned'
+      L3927: '•'
+  >>> L3928: ' Difficulty in breathing (upper'
+      L3929: 'cervical spine injury)'
+      L3930: '•'
+      L3931: ' P'
+
+--- Line 5393 [ther e] ---
+      L5391: 'o lie down'
+      L5392: '•'
+  >>> L5393: ' M'
+      L5394: 'ay have fever (with infection)'
+      L5395: 'Airway burns •'
+      L5396: ' H'
+
+--- Line 5421 [ther e] ---
+      L5419: '•'
+      L5420: ' A'
+  >>> L5421: 'bnormal lung examination (crackles)'
+      L5422: 'Asthma/COPD •'
+      L5423: ' W'
+      L5424: 'heezing'
+
+--- Line 5728 [Unable t] ---
+      L5726: ''
+      L5727: ''
+  >>> L5728: 'DIB, hoarse voice and stridor on'
+      L5729: 'breathing in. You to suspect airway'
+      L5730: 'inflammation.'
+      L5731: '1.'
+
+--- Line 6420 [AL WAYS] ---
+      L6418: ' M'
+      L6419: 'ay have hypotension or bradycardia'
+  >>> L6420: '•'
+      L6421: ' Difficulty in breathing with an upper cervical spine injury'
+      L6422: 'Severe allergic'
+      L6423: 'reaction'
+
+--- Line 6759 [Unable t] ---
+      L6757: 'VIA NG'
+      L6758: 'YES'
+  >>> L6759: 'YES'
+      L6760: 'YES'
+      L6761: 'YES'
+      L6762: 'No No'
+
+--- Line 7579 [plac ement] ---
+      L7577: '______________________________________________________________________'
+      L7578: '3.'
+  >>> L7579: ''
+      L7580: '______________________________________________________________________'
+      L7581: '4.'
+      L7582: ''
+
+--- Line 7635 [Glasgo w] ---
+      L7633: ' • I'
+      L7634: 'n trauma, check Glasgow Coma Scale:'
+  >>> L7635: 'Check and monitor the Glasgow Coma Scale. [See SKILLS]'
+      L7636: ' • C'
+      L7637: 'heck the blood glucose level:'
+      L7638: 'Hypoglycaemia can cause altered mental status. Diabetic ketoacidosis can present with'
+
+--- Line 7717 [AL WAYS] ---
+      L7715: '========================= TRANG PDF 137 ========================='
+      L7716: ''
+  >>> L7717: 'SHOCK BREATHING TRAUMA INTROABCDEAMSSKILLSGLOSSARYREFS & QUICK CARDS'
+      L7718: 'PARTICIPANT WORKBOOK'
+      L7719: '129 129'
+      L7720: 'POSSIBLE CAUSES OF ALTERED MENTAL STATUS'
+
+--- Line 7780 [Ho w] ---
+      L7778: 'Inflammation/infection'
+      L7779: 'around the brain'
+  >>> L7780: '(meningitis, encephalitis,'
+      L7781: 'brain abscess, bleeding)'
+      L7782: '•'
+      L7783: ' F'
+
+--- Line 8356 [Bruising t] ---
+      L8354: 'Answer the questions below. Questions and answers will be discussed in the session.'
+      L8355: '1. You are evaluating ABCDE on a 4-year-old boy who has a fever and a cough. He is not'
+  >>> L8356: 'responding to you calling his name, but if you pinch the sole of his foot, he moans. What is his'
+      L8357: 'level on the AVPU scale?'
+      L8358: 'A.'
+      L8359: ' A'
+
+--- Line 10768 [Ab dominal / chok ing] ---
+      L10766: 'pressure to make the chest rise and be sure to allow enough time between breaths for'
+      L10767: 'exhalation (for the air to escape). Large volumes of air or high pressures may result in'
+  >>> L10768: 'pneumothorax or irreversible lung damage.'
+      L10769: 'Bag-mask-ventilation steps:'
+      L10770: '•'
+      L10771: ' I'
+
+--- Line 10813 [Check t] ---
+      L10811: '•'
+      L10812: ' S'
+  >>> L10813: 'queeze bag over 1–2 seconds to provide chest rise (giving the breath faster can cause lung'
+      L10814: 'damage).'
+      L10815: '•'
+      L10816: ' Give one breath every 6 seconds (10 breaths per minute) in an adult; one breath every 4 seconds'
+
+--- Line 11150 [NE VER] ---
+      L11148: ' C'
+      L11149: 'onsult advanced provider as soon as possible (and never more than 2 hours) after placing a'
+  >>> L11150: 'tourniquet.'
+      L11151: '•'
+      L11152: ' T'
+      L11153: 'he tourniquet should be released every 2 hours for at least 10 minutes. Hold direct pressure to'
+
+--- Line 11629 [Explain t] ---
+      L11627: '• Insert IV line as above.'
+      L11628: '•'
+  >>> L11629: ' W'
+      L11630: 'eigh the child.'
+      L11631: '•'
+      L11632: ' Give 10–15 ml per kilogram of IV fluid over 1 hour. If specialized fluids are available, give one of the'
+
+--- Line 11831 [Difficult y] ---
+      L11829: 'onitor closely for signs of fluid overload'
+      L11830: 'Comments:'
+  >>> L11831: 'Skill 8 – IV fluid resuscitation for shock'
+      L11832: 'Verbalize caution in administering IV fluid in a malnourished,'
+      L11833: 'anaemic or fluid-overloaded patient'
+      L11834: 'Insert an IV cannula as described above'
+
+--- Line 11836 [Unable t] ---
+      L11834: 'Insert an IV cannula as described above'
+      L11835: 'Attach the IV cannula to the correct fluid for administration'
+  >>> L11836: 'Fluid administration for an adult should be normal saline or'
+      L11837: 'Ringer’s Lactate'
+      L11838: 'States fluid administration for shock in an adult should be 1L'
+      L11839: 'given over <30 minutes'
+
+--- Line 12362 [are fully] ---
+      L12360: 'Comments:'
+      L12361: 'Skill 2 – Log roll'
+  >>> L12362: 'State indications for a log roll.'
+      L12363: 'Ask for assistance.'
+      L12364: 'Place one person at the head to hold the neck, one or two'
+      L12365: 'people to hold the body and one for the legs.'
+
+--- Line 12640 [Bandages t] ---
+      L12638: ' No'
+      L12639: 'w assess the outer edge of the burn (burn depth can vary for different areas of the burn).'
+  >>> L12640: '•'
+      L12641: ' U'
+      L12642: 'se the chart below to guide your assessment findings.'
+      L12643: ''
+
+--- Line 12889 [Haemor rhage] ---
+      L12887: '•'
+      L12888: ' T'
+  >>> L12889: 'achycardia (elevated'
+      L12890: 'heart rate)'
+      L12891: '•'
+      L12892: ' Dizziness'
+
+--- Line 13426 [butt ocks] ---
+      L13424: 'in the centre of his chest. He has no allergies. He takes a blood pressure medication, but cannot'
+      L13425: 'recall the medication’s name. He had a heart attack 2 years ago that felt very much like the pain'
+  >>> L13426: 'he was having today. His last meal was 6 hours ago. The pain started while he was walking'
+      L13427: 'home carrying several heavy bags, though he now has no pain. His vital signs, ABCDE survey,'
+      L13428: 'and head-to-toe examination are normal. You have given aspirin and started an IV line and will'
+      L13429: 'now handover to an inpatient provider.'
+
+--- Line 13807 [pr ovider] ---
+      L13805: 'Blood clot travelling to and blocking the vessels of the lungs. The most common source is the legs.'
+      L13806: 'Pulse oximeter'
+  >>> L13807: 'Device that detects oxygen saturation (the percentage of red blood cells saturated with'
+      L13808: 'oxygen).'
+      L13809: 'Rabies'
+      L13810: 'A virus that is transmitted through animal bites that affects the brain and nerves and can cause'
+
+--- Line 13813 [cautions r] ---
+      L13811: 'altered mental status.'
+      L13812: 'Rebound tenderness'
+  >>> L13813: 'Pain that occurs when releasing pressure on the abdomen (as opposed to when pressing on'
+      L13814: 'the abdomen).'
+      L13815: ''
+      L13816: ''
+
+--- Line 14051 [be low] ---
+      L14049: 'Estimating systolic blood pressure'
+      L14050: '(not reliable in children and the elderly):'
+  >>> L14051: 'Carotid (neck) pulse \uf0e0 SBP ≥ 60 mmHg'
+      L14052: 'Femoral (groin) pulse \uf0e0 SBP ≥ 70 mmHg'
+      L14053: 'Radial (wrist) pulse \uf0e0 SBP ≥80 mmHg'
+      L14054: 'SAMPLE History'
