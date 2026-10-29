@@ -77,6 +77,13 @@ class AskEndpointTriageTests(unittest.TestCase):
                 "page": "32",
                 "start_line": 10,
                 "end_line": 15,
+                "source_id": "TEST_SOURCE",
+                "source_title": "Test source",
+                "publishers": ("Test publisher",),
+                "publication_year": 2026,
+                "topics": ("test",),
+                "language": "en",
+                "source_path": "tests/fixture.txt",
             },
         )()
         with patch("app.internal_pilot.retrieve", return_value=[(fake_chunk, 0.9)]), patch(
