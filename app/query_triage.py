@@ -77,10 +77,10 @@ _GREETINGS = {"xin chao", "chao", "hello", "hi", "cam on", "xin cam on"}
 _DOCUMENT_INTENT_PATTERNS = tuple(
     re.compile(pattern)
     for pattern in [
-        r"\\btheo tai lieu\\b",
-        r"\\btrong tai lieu\\b",
-        r"\\btai lieu\\b.*\\b(neu|huong dan|trinh bay|mo ta|liet ke|de cap|ghi|co noi)\\b",
-        r"\\b(tom tat|tong hop|giai thich|trinh bay|liet ke)\\b.*\\b(theo tai lieu|trong tai lieu|tai lieu)\\b",
+        r"\btheo tai lieu\b",
+        r"\btrong tai lieu\b",
+        r"\btai lieu\b.*\b(neu|huong dan|trinh bay|mo ta|liet ke|de cap|ghi|co noi)\b",
+        r"\b(tom tat|tong hop|giai thich|trinh bay|liet ke)\b.*\b(theo tai lieu|trong tai lieu|tai lieu)\b",
     ]
 )
 
