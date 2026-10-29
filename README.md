@@ -545,6 +545,3 @@ Mọi thay đổi liên quan đến hướng dẫn y tế, quy tắc an toàn ho
 <p align="center">
   <b>🧪 Dự án nghiên cứu đang phát triển — ưu tiên khả năng truy nguyên, kiểm chứng và an toàn.</b>
 </p>
-
-
-<!-- Documentation note from PR #2: the request triage integration is described on that feature branch. -->
