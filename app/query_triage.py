@@ -1,8 +1,7 @@
-"""Conservative query triage for the offline medical-document pilot.
+"""Conservative request triage for the offline medical-document pilot.
 
-This module deliberately does not diagnose, determine clinical urgency, or recommend
-patient-specific treatment. It provides a transparent keyword gate for the document
-lookup prototype; its output must not be treated as a clinical classifier.
+This is an explainable lexical guard, not a validated medical or emergency
+classifier. It must never be used to reassure a user that no emergency exists.
 """
 from __future__ import annotations
 
@@ -33,8 +32,8 @@ def _fold(text: str) -> str:
     return "".join(ch for ch in value if not unicodedata.combining(ch))
 
 
-# These are conservative lexical triggers, not a validated medical model.
-_EMERGENCY_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
+# Lexical triggers are intentionally conservative and require external validation.
+_EMERGENCY_PATTERNS = tuple(
     (label, re.compile(pattern))
     for label, pattern in [
         ("khó thở", r"\b(kho tho|khong tho duoc|ngat tho|ngung tho)\b"),
@@ -48,86 +47,80 @@ _EMERGENCY_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     ]
 )
 
-_PERSONAL_PATTERNS: tuple[re.Pattern[str], ...] = tuple(
+_PERSONAL_PATTERNS = tuple(
     re.compile(pattern)
     for pattern in [
-        r"\btoi (nen|co nen|phai) (uong|dung|ngung|tang|giam)\b",
-        r"\b(con toi|be nha toi|me toi|bo toi|vo toi|chong toi) (bi|dang)\b",
-        r"\btoi (bi|dang bi|mac) (dau|sot|ho|non|buon non|tieu chay|dau bung|kho tho)\b",
-        r"\blieu (thuoc|dung) (bao nhieu|cho)\b",
-        r"\bco nen (uong|dung|ket hop) thuoc\b",
-        r"\bket qua xet nghiem cua toi\b",
+        r"\btoi\b.*\b(nen|co nen|phai|co the)\b.*\b(uong|dung|ngung|tang|giam|ket hop)\b.*\bthuoc\b",
+        r"\b(con toi|be nha toi|me toi|bo toi|vo toi|chong toi|nguoi nha toi)\b.*\b(bi|dang|co dau hieu)\b",
+        r"\btoi\b.*\b(bi|dang bi|mac|co trieu chung)\b.*\b(dau|sot|ho|non|buon non|tieu chay|dau bung|kho tho|chong mat)\b",
+        r"\b(lieu|lieu dung)\b.*\b(thuoc|dung)\b.*\b(bao nhieu|the nao|cho tre|cho be)\b",
+        r"\b(ket qua xet nghiem|chi so xet nghiem)\b.*\b(cua toi|cua be|cua con toi)\b",
+        r"\bco nen\b.*\b(uong|dung|ket hop|ngung)\b.*\bthuoc\b",
     ]
 )
 
-_MEDICAL_TERMS = {
+_MEDICAL_TERMS = (
     "so cuu", "cap cuu", "soc", "ha duong huyet", "ran can", "bong",
     "chay mau", "chan thuong", "kho tho", "dau nguc", "co giat",
     "danh gia ban dau", "benh nhan", "nguoi benh", "tinh trang",
-}
-_HEALTH_TERMS = {
+)
+_HEALTH_TERMS = (
     "benh", "trieu chung", "thuoc", "xet nghiem", "dinh duong",
     "huyet ap", "duong huyet", "sot", "dau dau", "ho", "ung thu",
     "tim mach", "tieu duong", "thai ky", "tre em", "vaccine",
-}
+)
+_GREETINGS = {"xin chao", "chao", "hello", "hi", "cam on", "xin cam on"}
 
 
 def classify_query(question: str) -> TriageResult:
-    """Classify the *request shape* with conservative, explainable lexical rules.
-
-    A possible-emergency result is a precautionary prompt only. It neither
-    establishes nor excludes an emergency. No match must never reassure users.
-    """
+    """Return a cautious request-shape label; this is not clinical triage."""
     normalized = _fold(question).strip()
     if not normalized:
         return TriageResult(QueryClass.AMBIGUOUS, "Vui lòng nhập câu hỏi.")
 
-    emergency_matches = tuple(
-        label for label, pattern in _EMERGENCY_PATTERNS if pattern.search(normalized)
-    )
+    emergency_matches = tuple(label for label, pattern in _EMERGENCY_PATTERNS if pattern.search(normalized))
     if emergency_matches:
         return TriageResult(
             QueryClass.POSSIBLE_EMERGENCY,
-            "Câu hỏi có thể mô tả tình huống nguy hiểm. Nếu đây là tình huống đang xảy ra, "
-            "hãy liên hệ dịch vụ cấp cứu hoặc cơ sở y tế tại địa phương ngay; đừng chờ câu trả lời "
-            "của phần mềm. Bản thử nghiệm này không thể đánh giá tình trạng người bệnh. "
-            "Các dấu hiệu từ khóa được phát hiện không phải là chẩn đoán.",
+            "Câu hỏi có thể mô tả tình huống nguy hiểm. Nếu tình huống đang xảy ra, hãy liên hệ "
+            "dịch vụ cấp cứu hoặc cơ sở y tế tại địa phương ngay; đừng chờ câu trả lời của phần mềm. "
+            "Bản thử nghiệm không thể đánh giá tình trạng người bệnh. Cảnh báo từ khóa không phải chẩn đoán.",
             emergency_matches,
         )
 
     if any(pattern.search(normalized) for pattern in _PERSONAL_PATTERNS):
         return TriageResult(
             QueryClass.PERSONAL_MEDICAL_ADVICE,
-            "Ứng dụng hiện chỉ tra cứu tài liệu nguồn, không đủ cơ sở để quyết định chẩn đoán, "
-            "liều thuốc hoặc xử trí cá nhân. Hãy trao đổi với nhân viên y tế phù hợp; nếu có dấu "
-            "hiệu nguy hiểm, tìm trợ giúp khẩn cấp.",
+            "Ứng dụng hiện chỉ tra cứu tài liệu nguồn, không đủ cơ sở để quyết định chẩn đoán, liều thuốc "
+            "hoặc xử trí cá nhân. Hãy trao đổi với nhân viên y tế phù hợp; nếu có dấu hiệu nguy hiểm, "
+            "tìm trợ giúp khẩn cấp.",
         )
 
-    greetings = {"xin chao", "chao", "hello", "hi", "cam on", "xin cam on"}
-    if normalized in greetings:
+    if normalized in _GREETINGS:
         return TriageResult(
             QueryClass.GREETING,
             "Xin chào. Tôi có thể giúp tra cứu nội dung trong tài liệu WHO/ICRC Basic Emergency Care (2018).",
         )
 
-    tokens = set(re.findall(r"[a-z0-9]+", normalized))
-    medical_matches = tuple(sorted(term for term in _MEDICAL_TERMS if term in normalized))
+    medical_matches = tuple(term for term in _MEDICAL_TERMS if term in normalized)
     if medical_matches:
         return TriageResult(
             QueryClass.DOCUMENT_LOOKUP,
-            "Yêu cầu có vẻ liên quan đến nội dung y tế trong phạm vi tra cứu tài liệu hiện có.",
+            "Yêu cầu có vẻ liên quan đến chủ đề trong phạm vi tra cứu tài liệu. Hệ thống vẫn cần tìm được "
+            "đoạn nguồn phù hợp trước khi tạo câu trả lời.",
             medical_matches,
         )
 
-    health_matches = tuple(sorted(term for term in _HEALTH_TERMS if term in normalized))
+    health_matches = tuple(term for term in _HEALTH_TERMS if term in normalized)
     if health_matches:
         return TriageResult(
             QueryClass.OUT_OF_SCOPE,
-            "Chủ đề có vẻ thuộc lĩnh vực y tế nhưng có thể nằm ngoài tài liệu hiện được tích hợp. "
-            "Hệ thống chỉ trả lời khi tìm được bằng chứng liên quan trong kho nguồn.",
+            "Chủ đề thuộc lĩnh vực sức khỏe nhưng có thể nằm ngoài tài liệu được tích hợp. Hệ thống chỉ "
+            "trả lời khi tìm được bằng chứng liên quan trong kho nguồn.",
             health_matches,
         )
 
+    tokens = set(re.findall(r"[a-z0-9]+", normalized))
     if len(tokens) <= 2:
         return TriageResult(
             QueryClass.AMBIGUOUS,
@@ -136,5 +129,6 @@ def classify_query(question: str) -> TriageResult:
 
     return TriageResult(
         QueryClass.OUT_OF_SCOPE,
-        "Chưa xác định được câu hỏi thuộc phạm vi tài liệu hiện có. Hệ thống sẽ không tự tạo câu trả lời y tế khi chưa tìm được nguồn phù hợp.",
+        "Chưa xác định được câu hỏi thuộc phạm vi tài liệu hiện có. Hệ thống sẽ không tự tạo câu trả lời "
+        "y tế khi chưa tìm được nguồn phù hợp.",
     )
