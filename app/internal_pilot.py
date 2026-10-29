@@ -65,6 +65,9 @@ SOURCE_PATH = ROOT / "knowledge_base" / "03_cleaned" / "WHO_ICRC_Basic_Emergency
 SOURCE_REGISTRY_PATH = ROOT / "knowledge_base" / "source_registry.json"
 MODEL = os.environ.get("BEC_OLLAMA_MODEL", "qwen2.5:7b-instruct-q4_K_M")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434")
+# Optional CPU fallback for machines whose local CUDA runner fails to initialize.
+# Set BEC_OLLAMA_NUM_GPU=0 to request CPU-only inference from Ollama.
+OLLAMA_NUM_GPU = os.environ.get("BEC_OLLAMA_NUM_GPU", "").strip()
 HOST = "127.0.0.1"
 PORT = int(os.environ.get("BEC_PILOT_PORT", "8765"))
 MAX_BODY = 12_000
@@ -448,6 +451,18 @@ def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
     return chosen
 
 
+def _ollama_options(num_predict: int) -> dict[str, Any]:
+    options: dict[str, Any] = {"temperature": 0, "seed": 42, "num_predict": num_predict}
+    if OLLAMA_NUM_GPU:
+        try:
+            options["num_gpu"] = int(OLLAMA_NUM_GPU)
+        except ValueError as exc:
+            raise RuntimeError(
+                "BEC_OLLAMA_NUM_GPU phải là số nguyên; đặt bằng 0 để thử chạy CPU-only."
+            ) from exc
+    return options
+
+
 def ollama_chat(system: str, user: str, num_predict: int = 650) -> str:
     """Call local Ollama, retry transient server errors once, and preserve diagnostics."""
     body = json.dumps({
@@ -455,7 +470,7 @@ def ollama_chat(system: str, user: str, num_predict: int = 650) -> str:
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
         "think": False,
         "stream": False,
-        "options": {"temperature": 0, "seed": 42, "num_predict": num_predict},
+        "options": _ollama_options(num_predict),
     }).encode("utf-8")
     endpoint = f"{OLLAMA_URL.rstrip('/')}/api/chat"
     req = urllib.request.Request(
@@ -738,29 +753,62 @@ def call_model_uncached(query: str, retrieved: list[tuple[Chunk, float]]) -> tup
     system += " Include every distinct instruction and condition listed in the source. Do not claim there are no further steps unless you have covered them all. Answer in Vietnamese only. Cite every factual bullet. Never output Han, Japanese, or Korean characters. For a conditional question, answer only the requested branch and include alternatives only when the source states them as fallbacks."
     user = f"CÂU HỎI:\n{query}\n\nCÁC ĐOẠN NGUỒN:\n{'\n\n'.join(contexts)}\n\nHãy trả lời bằng tiếng Việt, đầy đủ và chỉ dựa trên nguồn. Không chèn từ tiếng Anh trong ngoặc."
     try:
-        answer = ollama_chat(system, user, 450)
-        answer = localize_medical_terms(answer, "\n".join(chunk.text for chunk, _ in retrieved))
-        if asks_shock_signs:
-            answer = re.sub(r"(?m)^(-\s+[^\n]+?)(?<!\[S1\])$", r"\1 [S1]", answer)
+        # Retry once with an explicit format-repair instruction when the model
+        # omits citations or leaves factual bullets uncited. Do not fabricate
+        # citations using lexical overlap: Vietnamese paraphrases may not share
+        # tokens with the English source, and token overlap is not entailment.
+        answer = ""
+        validation_issue = None
         valid = {f"S{i}" for i in range(1, len(contexts) + 1)}
-        refs = re.findall(r"\[(S\d+)\]", answer)
-        if any(ref not in valid for ref in refs):
-            return "Không thể hiển thị câu trả lời đáng tin cậy. Vui lòng đọc các đoạn nguồn đã dịch bên dưới.", "Mô hình tạo mã trích dẫn không có trong nguồn; câu trả lời đã bị ẩn."
-        cited_lines = []
-        for line in answer.splitlines():
-            if re.match(r"\s*(?:[-*]|\d+[.)])\s+", line) and not re.search(r"\[\s*S\d+(?:\s*,\s*S\d+)*\s*\]", line):
-                claim_text = re.sub(r"\[S\d+\]", "", line)
-                claim_terms = set(terms(claim_text)) | set(expand_query(claim_text))
-                overlaps = [len(claim_terms & set(terms(chunk.text))) for chunk, _ in answer_sources]
-                best = max(range(len(overlaps)), key=overlaps.__getitem__, default=-1)
-                if best < 0 or overlaps[best] < 1:
-                    return "Ch\u01b0a th\u1ec3 tr\u1ea3 l\u1eddi ch\u1eafc ch\u1eafn t\u1eeb c\u00e1c \u0111o\u1ea1n v\u1eeba t\u00ecm \u0111\u01b0\u1ee3c. H\u00e3y xem ngu\u1ed3n ho\u1eb7c th\u1eed h\u1ecfi c\u1ee5 th\u1ec3 h\u01a1n.", "C\u00e2u tr\u1ea3 l\u1eddi thi\u1ebfu tr\u00edch d\u1eabn \u0111\u1ee7 \u0111\u1ec3 \u0111\u1ed1i chi\u1ebfu; c\u00e2u tr\u1ea3 l\u1eddi \u0111\u00e3 \u0111\u01b0\u1ee3c \u1ea9n."
-                line += f" [S{best + 1}]"
-            cited_lines.append(line)
-        answer = "\n".join(cited_lines)
-        refs = re.findall(r"\[(S\d+)\]", answer)
-        if not refs:
-            return "Ch\u01b0a th\u1ec3 tr\u1ea3 l\u1eddi ch\u1eafc ch\u1eafn t\u1eeb c\u00e1c \u0111o\u1ea1n v\u1eeba t\u00ecm \u0111\u01b0\u1ee3c. H\u00e3y xem ngu\u1ed3n ho\u1eb7c th\u1eed h\u1ecfi c\u1ee5 th\u1ec3 h\u01a1n.", "C\u00e2u tr\u1ea3 l\u1eddi kh\u00f4ng c\u00f3 tr\u00edch d\u1eabn \u0111\u1ee7 \u0111\u1ec3 \u0111\u1ed1i chi\u1ebfu; c\u00e2u tr\u1ea3 l\u1eddi \u0111\u00e3 \u0111\u01b0\u1ee3c \u1ea9n."
+        for attempt in range(2):
+            current_user = user
+            if attempt == 1:
+                current_user += (
+                    "\n\nYÊU CẦU SỬA ĐỊNH DẠNG: Câu trả lời trước không đáp ứng định dạng trích dẫn. "
+                    "Hãy viết lại ngắn gọn bằng tiếng Việt, chỉ dùng các đoạn nguồn đã cho. "
+                    "Mỗi gạch đầu dòng hoặc khẳng định thực tế phải kết thúc bằng mã nguồn hợp lệ "
+                    "như [S1] hoặc [S2]. Chỉ dùng các mã nguồn thực sự có trong phần nguồn; "
+                    "không tự tạo mã. Nếu nguồn không đủ, nói rõ phần nào chưa được tài liệu hỗ trợ."
+                )
+            answer = ollama_chat(system, current_user, 450)
+            answer = localize_medical_terms(answer, "\n".join(chunk.text for chunk, _ in answer_sources))
+            if asks_shock_signs:
+                answer = re.sub(r"(?m)^(-\s+[^\n]+?)(?<!\[S1\])$", r"\1 [S1]", answer)
+
+            citation_groups = re.findall(r"\[(S\d+(?:\s*,\s*S\d+)*)\]", answer)
+            refs = [ref for group in citation_groups for ref in re.findall(r"S\d+", group)]
+            invalid_refs = [ref for ref in refs if ref not in valid]
+            uncited_bullets = [
+                line for line in answer.splitlines()
+                if re.match(r"\s*(?:[-*•]|\d+[.)])\s+", line)
+                and not re.search(r"\[\s*S\d+(?:\s*,\s*S\d+)*\s*\]", line)
+            ]
+            if refs and not invalid_refs and not uncited_bullets:
+                validation_issue = None
+                break
+            if attempt == 0:
+                validation_issue = (
+                    "missing_citation" if not refs
+                    else "invalid_citation" if invalid_refs
+                    else "uncited_bullet"
+                )
+                continue
+            validation_issue = (
+                "missing_citation" if not refs
+                else "invalid_citation" if invalid_refs
+                else "uncited_bullet"
+            )
+
+        if validation_issue:
+            messages = {
+                "missing_citation": "Mô hình không tạo được mã trích dẫn hợp lệ sau một lần yêu cầu sửa; câu trả lời đã bị ẩn.",
+                "invalid_citation": "Mô hình tiếp tục tạo mã trích dẫn không có trong nguồn sau một lần yêu cầu sửa; câu trả lời đã bị ẩn.",
+                "uncited_bullet": "Một hoặc nhiều ý liệt kê vẫn thiếu mã trích dẫn sau một lần yêu cầu sửa; câu trả lời đã bị ẩn.",
+            }
+            return (
+                "Chưa thể hiển thị câu trả lời vì định dạng trích dẫn chưa hợp lệ. Hãy đọc các đoạn nguồn bên dưới.",
+                messages[validation_issue],
+            )
         warning = translation_quality_warning(answer)
         if warning:
             return "Chưa tạo được câu trả lời tiếng Việt đạt kiểm tra. Vui lòng xem các đoạn nguồn đã dịch bên dưới.", warning
