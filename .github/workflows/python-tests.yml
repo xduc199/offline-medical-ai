@@ -22,3 +22,5 @@ jobs:
           python-version: "3.12"
       - name: Run unit and local API tests
         run: python -m unittest discover -s tests -p "test*.py" -v
+      - name: Evaluate keyword retrieval baseline
+        run: python -m tests.evaluate_retrieval --method keyword --top-k 5
