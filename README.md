@@ -354,18 +354,30 @@ Các biến môi trường cần được đặt trong cùng cửa sổ PowerShe
 | `/api/ask` | `POST` | Truy xuất đoạn nguồn và tạo câu trả lời |
 | `/api/translate` | `POST` | Dịch tối đa các đoạn nguồn đang được hỗ trợ bởi mã nguồn |
 
-### Nền tảng phân loại yêu cầu (đang phát triển)
+### Nền tảng phân loại yêu cầu (prototype)
 
-Nhánh `feat/hybrid-retrieval-safety-foundation` bổ sung `app/query_triage.py`, một bộ phân loại yêu cầu theo quy tắc từ khóa có thể giải thích. Thành phần này phân biệt lời chào, câu hỏi tra cứu tài liệu, câu hỏi cá nhân cần nhân viên y tế tư vấn, câu hỏi ngoài phạm vi, câu hỏi mơ hồ và các cụm từ *có thể* biểu thị tình huống nguy hiểm.
+Mã nguồn hiện tại tích hợp `app/query_triage.py` trước bước truy xuất trong `/api/ask`. Thành phần này dùng quy tắc từ khóa có thể giải thích để chia yêu cầu thành sáu nhóm: lời chào, tra cứu tài liệu, câu hỏi ngoài phạm vi, câu hỏi cá nhân cần nhân viên y tế tư vấn, câu hỏi có thể mô tả tình huống nguy hiểm và câu hỏi mơ hồ.
 
-Đây **không phải** mô hình phân loại cấp cứu đã được kiểm định. Từ khóa có thể gây báo động giả hoặc bỏ sót; không phát hiện được từ khóa không có nghĩa là người dùng an toàn. Trên nhánh phát triển, thành phần đã được gọi trước truy xuất trong `/api/ask`. Các nhánh lời chào, từ khóa có thể nguy hiểm và câu hỏi tư vấn cá nhân được chặn trước khi truy xuất/gọi mô hình; câu hỏi ngoài phạm vi vẫn cần được xác nhận bằng nguồn và gắn cảnh báo. Những quy tắc này chưa được thẩm định y khoa, có thể bỏ sót hoặc báo động giả.
+Các nhánh lời chào, câu hỏi cá nhân, tình huống có thể nguy hiểm và đầu vào mơ hồ được trả lời/chặn trước khi gọi retrieval hoặc LLM. Nếu không tìm được đoạn nguồn phù hợp, API trả về thông báo không có đủ bằng chứng và nhãn phân loại. Câu hỏi ngoài phạm vi nhưng có đoạn nguồn liên quan vẫn chỉ được trả lời dựa trên các đoạn truy xuất và có cảnh báo không suy rộng thành tư vấn y khoa tổng quát.
 
-Chạy kiểm thử quy tắc:
+**Giới hạn an toàn:** đây chỉ là bộ lọc từ khóa thử nghiệm, không phải hệ thống phân loại cấp cứu đã được kiểm định. Nó có thể báo động giả hoặc bỏ sót; việc không phát hiện từ khóa không có nghĩa là người dùng an toàn. Không dùng ứng dụng để chẩn đoán, kê đơn, phân loại cấp cứu hay quyết định xử trí người bệnh.
+
+### Kiểm thử tự động
+
+Chạy hai nhóm kiểm thử từ thư mục gốc:
 
 ```powershell
 python -m unittest tests.test_query_triage -v
 python -m unittest tests.test_ask_endpoint_triage -v
 ```
+
+Hoặc chạy toàn bộ kiểm thử:
+
+```powershell
+python -m unittest discover -s tests -p "test*.py" -v
+```
+
+GitHub Actions được cấu hình tại `.github/workflows/python-tests.yml` để chạy các bài kiểm thử khi có push hoặc pull request. Kết quả phải được xem trên tab **Actions**; chỉ việc thêm workflow không có nghĩa là CI đã chạy thành công.
 
 Ví dụ kiểm tra trạng thái:
 
