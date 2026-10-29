@@ -39,6 +39,13 @@ except ModuleNotFoundError as exc:
     from answer_validation import validate_grounded_answer
 
 try:
+    from app.topic_relevance import filter_topic_candidates
+except ModuleNotFoundError as exc:
+    if exc.name != "app":
+        raise
+    from topic_relevance import filter_topic_candidates
+
+try:
     from app.semantic_retrieval import (
         DEFAULT_INDEX_PATH,
         DEFAULT_MODEL as DEFAULT_EMBEDDING_MODEL,
@@ -398,7 +405,8 @@ def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
     keyword_results = keyword_retrieve(query, limit=max(8, limit * 4))
     if SEMANTIC_INDEX is None:
         _set_retrieval_diagnostics("keyword")
-        return keyword_results[:limit]
+        filtered = filter_topic_candidates(query, keyword_results)
+        return filtered[:limit]
 
     try:
         semantic_results = semantic_search(
@@ -412,7 +420,7 @@ def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
             "keyword_fallback",
             f"Embedding cục bộ không khả dụng; đã chuyển sang tìm kiếm từ khóa. Chi tiết: {exc}",
         )
-        return keyword_results[:limit]
+        return filter_topic_candidates(query, keyword_results)[:limit]
 
     if not semantic_results or semantic_results[0][1] < SEMANTIC_MIN_SCORE:
         _set_retrieval_diagnostics(
@@ -420,7 +428,7 @@ def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
             "Điểm tương đồng ngữ nghĩa thấp hơn ngưỡng cấu hình; đã dùng tìm kiếm từ khóa. "
             "Ngưỡng này cần được hiệu chỉnh bằng bộ kiểm thử của dự án.",
         )
-        return keyword_results[:limit]
+        return filter_topic_candidates(query, keyword_results)[:limit]
 
     chunks_by_index = {chunk.index: chunk for chunk in CHUNKS}
     fused = fuse_with_chunks(
@@ -431,11 +439,12 @@ def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
     )
     if not fused:
         _set_retrieval_diagnostics("keyword_fallback", "Không hợp nhất được kết quả; đã dùng tìm kiếm từ khóa.")
-        return keyword_results[:limit]
+        return filter_topic_candidates(query, keyword_results)[:limit]
 
+    topic_filtered = filter_topic_candidates(query, fused)
     chosen: list[tuple[Chunk, float]] = []
     seen_regions: set[tuple[str, int]] = set()
-    for chunk, score in fused:
+    for chunk, score in topic_filtered:
         region = (chunk.page, chunk.start_line // 12)
         if region in seen_regions:
             continue
