@@ -23,7 +23,12 @@ _PROFILES = (
     {
         "query": ("co giat", "seizure", "convulsion"),
         "anchors": ("seizure", "convulsion", "seizing", "postictal", "antiepileptic"),
-        "off_topic": ("silent chest", "stridor", "salbutamol", "wheeze", "respiratory distress"),
+        "off_topic": (
+            "silent chest", "stridor", "salbutamol", "wheeze", "respiratory distress",
+            "pediatric exposure conditions", "difficulty maintaining temperature",
+            "hypothermic", "hyperthermic", "remove wet clothing", "skin-to-skin",
+            "cover infants' heads",
+        ),
     },
     {
         "query": ("ran can", "snake bite", "snakebite"),
@@ -53,7 +58,11 @@ _PROFILES = (
     {
         "query": ("chay mau", "bleeding", "hemorrhage", "haemorrhage"),
         "anchors": ("bleeding", "hemorrhage", "haemorrhage", "blood loss", "control bleeding"),
-        "off_topic": ("silent chest", "stridor", "salbutamol"),
+        "off_topic": (
+            "silent chest", "stridor", "salbutamol",
+            "perineal or vaginal tear", "postpartum hemorrhage", "uterine massage",
+            "advanced obstetric provider",
+        ),
     },
     {
         "query": ("soc", "shock", "poor perfusion"),
@@ -93,10 +102,14 @@ def filter_topic_candidates(query: str, candidates: Sequence[tuple[T, float]]) -
 
     kept: list[tuple[T, float]] = []
     for item, text, is_relevant in zip(original, texts, relevant):
+        # Exclude clearly mismatched sections before accepting a topical anchor.
+        # A single chunk may contain both a relevant phrase and an unrelated
+        # neighboring section (for example, pediatric seizures plus temperature
+        # management, or general bleeding plus postpartum hemorrhage).
+        if _has_phrase(text, profile["off_topic"]):
+            continue
         if is_relevant:
             kept.append(item)
-            continue
-        if _has_phrase(text, profile["off_topic"]):
             continue
         navigation_markers = ("glossary", "quick cards", "participant workbook", "refs & quick cards")
         if sum(marker in text for marker in navigation_markers) >= 2:
