@@ -1,22 +1,14 @@
-#  Trợ lý AI y tế ngoại tuyến
+# Trợ lý AI y tế ngoại tuyến
 
 > **Nghiên cứu và xây dựng trợ lý AI chạy cục bộ, hỗ trợ tra cứu kiến thức cấp cứu cơ bản từ tài liệu WHO/ICRC khi không có Internet.**
 
-<p align="center">
-  <b> Truy xuất có nguồn ·  Chạy trên máy cá nhân ·  Có công cụ đánh giá</b>
-</p>
+<p align="center"><b>Truy xuất có nguồn · Chạy trên máy cá nhân · Có công cụ đánh giá</b></p>
 
-<p align="center">
-  <a href="#-giới-thiệu">Giới thiệu</a> ·
-  <a href="#-cài-đặt">Cài đặt</a> ·
-  <a href="#-sử-dụng">Sử dụng</a> ·
-  <a href="#-đánh-giá">Đánh giá</a> ·
-  <a href="#-an-toàn-và-giới-hạn">An toàn & giới hạn</a>
-</p>
+**Mục lục:** [Giới thiệu](#giới-thiệu) · [Cài đặt](#cài-đặt) · [Sử dụng](#sử-dụng) · [Đánh giá](#đánh-giá) · [An toàn và giới hạn](#an-toàn-và-giới-hạn)
 
 ---
 
-##  Giới thiệu
+## Giới thiệu
 
 **offline-medical-ai** là dự án nghiên cứu một trợ lý hỏi đáp dựa trên tài liệu (document-grounded QA — tạo câu trả lời dựa trên nguồn được truy xuất), hướng tới môi trường không có kết nối Internet.
 
@@ -32,7 +24,7 @@ Bản thử nghiệm tập trung vào tài liệu **WHO/ICRC *Basic Emergency Ca
 
 > **Phạm vi:** đây là prototype phục vụ nghiên cứu và thử nghiệm kỹ thuật, không phải sản phẩm y tế đã được thẩm định.
 
-##  Trạng thái chức năng
+## Trạng thái chức năng
 
 | Thành phần | Trạng thái được mô tả trong dự án |
 |---|---|
@@ -46,7 +38,7 @@ Bản thử nghiệm tập trung vào tài liệu **WHO/ICRC *Basic Emergency Ca
 
 Các trạng thái trên là mô tả kỹ thuật của mã nguồn, không phải bằng chứng về độ chính xác y khoa. Kết quả thực tế cần kiểm tra trên đúng commit và môi trường triển khai.
 
-##  Kiến trúc tổng quát
+## Kiến trúc tổng quát
 
 ```text
 Câu hỏi tiếng Việt
@@ -71,7 +63,7 @@ Câu trả lời + đoạn nguồn để đối chiếu
 
 Tùy cấu hình, bước truy xuất có thể dùng từ khóa hoặc hợp nhất thứ hạng từ khóa và vector bằng **Reciprocal Rank Fusion (RRF — hợp nhất thứ hạng)**. Điểm tương đồng và mã trích dẫn không tự chứng minh nội dung là đúng.
 
-##  Cấu trúc dự án
+## Cấu trúc dự án
 
 Một số đường dẫn chính:
 
@@ -98,7 +90,7 @@ offline-medical-ai/
 
 Các thư mục và tệp phụ có thể thay đổi theo phiên bản. Nếu đường dẫn không tồn tại trong bản clone của bạn, hãy kiểm tra cây thư mục và cấu hình được mã nguồn hiện tại sử dụng.
 
-##  Yêu cầu
+## Yêu cầu
 
 - Windows + PowerShell là môi trường hướng dẫn chính; hệ điều hành khác cần điều chỉnh lệnh tương ứng.
 - Python 3.12 trở lên theo cấu hình hướng dẫn hiện tại.
@@ -108,7 +100,7 @@ Các thư mục và tệp phụ có thể thay đổi theo phiên bản. Nếu �
 
 Model 7B cần tài nguyên bộ nhớ và lưu trữ đáng kể. Hiệu năng phụ thuộc phần cứng, lượng tử hóa, thiết lập runtime và độ dài ngữ cảnh; cấu hình tối thiểu chưa được xác lập trong README này.
 
-##  Cài đặt
+## Cài đặt
 
 ### 1. Clone repository
 
@@ -168,7 +160,7 @@ Dừng ứng dụng bằng `Ctrl + C` trong cửa sổ đang chạy server.
 
 > Nếu ứng dụng báo thiếu tệp hoặc lỗi khởi động, hãy dùng thông báo thực tế từ terminal để chẩn đoán; không tự tạo tệp dữ liệu giả để vượt qua lỗi.
 
-##  Sử dụng
+## Sử dụng
 
 1. Mở giao diện tại `http://127.0.0.1:8765`.
 2. Nhập câu hỏi cụ thể về nội dung tài liệu.
@@ -208,7 +200,7 @@ Invoke-RestMethod -Uri http://127.0.0.1:8765/api/ask -Method Post -ContentType "
 
 Các endpoint và trường JSON có thể thay đổi giữa các phiên bản; kiểm tra `app/internal_pilot.py` nếu phản hồi khác ví dụ.
 
-##  Cấu hình
+## Cấu hình
 
 Các biến môi trường được tài liệu hóa cho bản thử nghiệm:
 
@@ -251,7 +243,7 @@ Tài liệu tham khảo kỹ thuật:
 - [Ollama Embeddings](https://github.com/ollama/ollama/blob/main/docs/capabilities/embeddings.mdx)
 - [BGE-M3 trên Ollama](https://ollama.com/library/bge-m3)
 
-##  Đánh giá
+## Đánh giá
 
 ### Chạy bộ câu hỏi
 
@@ -304,7 +296,7 @@ python -m unittest discover -s tests -p "test*.py" -v
 
 Chỉ xem CI là đạt khi kiểm tra trạng thái thực tế trong tab **Actions** của GitHub; việc có workflow không đảm bảo mọi lần chạy đều thành công.
 
-##  Xử lý lỗi thường gặp
+## Xử lý lỗi thường gặp
 
 | Vấn đề | Kiểm tra |
 |---|---|
@@ -328,7 +320,7 @@ Test-Path .\knowledge_base\03_cleaned\WHO_ICRC_Basic_Emergency_Care_2018_cleaned
 
 Nếu vẫn lỗi, giữ nguyên dữ liệu, ghi lại thông báo lỗi đầy đủ và xác định nguyên nhân trước khi thay đổi môi trường.
 
-##  An toàn và giới hạn
+## An toàn và giới hạn
 
 ### Chỉ dùng cho nghiên cứu
 
@@ -345,7 +337,7 @@ Nếu vẫn lỗi, giữ nguyên dữ liệu, ghi lại thông báo lỗi đầy
 
 **Không nhập thông tin định danh hoặc dữ liệu nhạy cảm của người bệnh.** Chỉ chạy trên máy tin cậy; không mở server ra mạng công cộng.
 
-##  Hạn chế hiện tại
+## Hạn chế hiện tại
 
 1. Truy xuất có thể bỏ lỡ cách diễn đạt khác, nội dung bảng hoặc thông tin không nằm trong các đoạn được chọn.
 2. Kho tri thức hiện tập trung vào một tài liệu chính; chưa phải một cơ sở tri thức y tế toàn diện.
@@ -355,7 +347,7 @@ Nếu vẫn lỗi, giữ nguyên dữ liệu, ghi lại thông báo lỗi đầy
 6. Đánh giá cần nhãn tham chiếu được rà soát; benchmark truy xuất không phải đánh giá lâm sàng.
 7. Chưa có cơ sở để tuyên bố hệ thống đã được xác nhận an toàn cho bệnh nhân hoặc sẵn sàng triển khai thực tế.
 
-##  Hướng phát triển
+## Hướng phát triển
 
 Các mục dưới đây là định hướng nghiên cứu, không phải cam kết về tính năng đã hoàn thành:
 
@@ -370,7 +362,7 @@ Các mục dưới đây là định hướng nghiên cứu, không phải cam k
 
 Thứ tự ưu tiên: **chất lượng dữ liệu → chất lượng truy xuất → độ tin cậy của câu trả lời → đánh giá an toàn độc lập → cân nhắc mở rộng**.
 
-##  Nguồn tài liệu
+## Nguồn tài liệu
 
 - WHO/ICRC, *Basic Emergency Care: Approach to the Acutely Ill and Injured* (2018), được dùng làm nguồn chính cho bản thử nghiệm.
 - [Ollama](https://ollama.com/)
@@ -379,7 +371,7 @@ Thứ tự ưu tiên: **chất lượng dữ liệu → chất lượng truy xu�
 
 Trước khi phân phối PDF hoặc văn bản trích xuất, hãy xác minh giấy phép và điều kiện tái phân phối của tài liệu nguồn.
 
-##  Báo lỗi và phản hồi
+## Báo lỗi và phản hồi
 
 Khi báo lỗi, hãy cung cấp thông tin không nhạy cảm:
 
