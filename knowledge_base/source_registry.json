@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "description": "Danh mục tài liệu được phép đưa vào kho truy xuất. Chỉ nguồn có status=active mới được nạp.",
+  "sources": [
+    {
+      "source_id": "WHO_ICRC_BEC_2018",
+      "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+      "publishers": [
+        "World Health Organization",
+        "International Committee of the Red Cross"
+      ],
+      "publication_year": 2018,
+      "language": "en",
+      "topics": [
+        "first_aid",
+        "emergency_care",
+        "acute_illness",
+        "injury_assessment"
+      ],
+      "raw_path": "knowledge_base/01_raw/WHO/WHO_ICRC_Basic_Emergency_Care_2018.pdf",
+      "cleaned_path": "knowledge_base/03_cleaned/WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt",
+      "processing_version": "cleaned_v1",
+      "status": "active",
+      "review_status": "curated_text_not_clinically_validated",
+      "notes": "Đây là nguồn duy nhất đang được nạp vào prototype. Các tệp before_*, trial và bản trích xuất khác trong thư mục cleaned không được tự động đưa vào chỉ mục."
+    }
+  ]
+}
