@@ -31,6 +31,13 @@ except ModuleNotFoundError as exc:
     from query_triage import QueryClass, classify_query
 
 try:
+    from app.answer_validation import validate_grounded_answer
+except ModuleNotFoundError as exc:
+    if exc.name != "app":
+        raise
+    from answer_validation import validate_grounded_answer
+
+try:
     from app.semantic_retrieval import (
         DEFAULT_INDEX_PATH,
         DEFAULT_MODEL as DEFAULT_EMBEDDING_MODEL,
@@ -966,6 +973,11 @@ class Handler(BaseHTTPRequestHandler):
                 "score": score,
             }
                        for i, (chunk, score) in enumerate(found, 1)]
+            answer_check = validate_grounded_answer(answer, len(sources))
+            if not answer_check.accepted:
+                answer = answer_check.answer
+                warning_parts = [part for part in (warning, answer_check.warning) if part]
+                warning = " ".join(warning_parts) or "Câu trả lời bị ẩn do không đạt kiểm tra cấu trúc nguồn."
             if triage.classification == QueryClass.OUT_OF_SCOPE:
                 out_of_scope_warning = (
                     "Câu hỏi có thể nằm ngoài phạm vi tài liệu đang tích hợp. "

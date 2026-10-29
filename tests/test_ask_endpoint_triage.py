@@ -77,6 +77,13 @@ class AskEndpointTriageTests(unittest.TestCase):
                 "page": "32",
                 "start_line": 10,
                 "end_line": 15,
+                "source_id": "TEST_SOURCE",
+                "source_title": "Test source",
+                "publishers": ("Test publisher",),
+                "publication_year": 2026,
+                "topics": ("test",),
+                "language": "en",
+                "source_path": "tests/fixture.txt",
             },
         )()
         with patch("app.internal_pilot.retrieve", return_value=[(fake_chunk, 0.9)]), patch(
@@ -87,6 +94,8 @@ class AskEndpointTriageTests(unittest.TestCase):
         self.assertEqual(payload["classification"], "document_lookup")
         self.assertEqual(len(payload["sources"]), 1)
         self.assertEqual(payload["sources"][0]["id"], "S1")
+        self.assertEqual(payload["answer"], "Nội dung tham chiếu [S1].")
+        self.assertIsNone(payload["warning"])
 
 
 if __name__ == "__main__":
