@@ -58,6 +58,39 @@ class TopicRelevanceTests(unittest.TestCase):
 
         self.assertEqual(result, [bleeding])
 
+    def test_seizure_question_drops_mixed_chunk_with_unrelated_pediatric_exposure_section(self):
+        seizure = candidate(
+            "The goal in managing seizures is to prevent hypoxia and injury."
+        )
+        mixed_pediatric = candidate(
+            "Pediatric disability conditions: Always check for seizure/convulsions. "
+            "Pediatric exposure conditions: children can quickly become hypothermic. "
+            "Remove wet clothing and place infants skin-to-skin."
+        )
+
+        result = filter_topic_candidates(
+            "Tổng hợp cách xử trí co giật ở người lớn và trẻ em",
+            [seizure, mixed_pediatric],
+        )
+
+        self.assertEqual(result, [seizure])
+
+    def test_bleeding_question_drops_obstetric_specific_chunk_for_general_prompt(self):
+        general_bleeding = candidate(
+            "Shock signs include tachycardia and control bleeding."
+        )
+        obstetric = candidate(
+            "Visually check for a perineal or vaginal tear. "
+            "Uterine massage for postpartum hemorrhage."
+        )
+
+        result = filter_topic_candidates(
+            "Theo tài liệu, cần đánh giá và xử trí người bệnh bị chảy máu như thế nào?",
+            [general_bleeding, obstetric],
+        )
+
+        self.assertEqual(result, [general_bleeding])
+
     def test_preserves_candidates_when_no_explicit_anchor_is_recognized(self):
         first = candidate("A passage with unfamiliar wording.", 0.8)
         second = candidate("Another passage with unfamiliar wording.", 0.7)
