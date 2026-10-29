@@ -204,11 +204,12 @@ def load_index(
                 return None
             if not isinstance(entry.get("index"), int):
                 return None
-            try:
-                values = [float(value) for value in vector]
-            except (TypeError, ValueError):
-                return None
-            if any(not math.isfinite(value) for value in values):
+            if any(
+                isinstance(value, bool)
+                or not isinstance(value, (int, float))
+                or not math.isfinite(float(value))
+                for value in vector
+            ):
                 return None
         return index_data
     except (OSError, ValueError, TypeError, AttributeError, json.JSONDecodeError):
