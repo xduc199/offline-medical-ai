@@ -37,6 +37,26 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def source_fingerprint(source_path: Path, source_paths: Sequence[Path] | None = None) -> str:
+    """Hash every active source file so any corpus change invalidates the index."""
+    paths = list(source_paths) if source_paths is not None else [source_path]
+    if not paths:
+        paths = [source_path]
+    normalized_paths = [Path(path) for path in paths]
+    if len(normalized_paths) == 1 and normalized_paths[0].resolve() == source_path.resolve():
+        return sha256_file(source_path)
+
+    digest = hashlib.sha256()
+    for path in normalized_paths:
+        if not path.is_file():
+            raise FileNotFoundError(f"Knowledge source not found while fingerprinting: {path}")
+        digest.update(path.name.encode("utf-8"))
+        digest.update(b"\\0")
+        digest.update(sha256_file(path).encode("ascii"))
+        digest.update(b"\\n")
+    return digest.hexdigest()
+
+
 def _post_json(url: str, payload: dict[str, Any], timeout: float = EMBED_TIMEOUT) -> dict[str, Any]:
     request = urllib.request.Request(
         url,
@@ -107,6 +127,7 @@ def build_index(
     records: Sequence[dict[str, Any]],
     *,
     source_path: Path,
+    source_paths: Sequence[Path] | None = None,
     model: str = DEFAULT_MODEL,
     ollama_url: str = DEFAULT_OLLAMA_URL,
     index_path: Path = DEFAULT_INDEX_PATH,
@@ -130,6 +151,13 @@ def build_index(
             "start_line": int(record.get("start_line", 0)),
             "end_line": int(record.get("end_line", 0)),
             "text": text,
+            "source_id": str(record.get("source_id", "")),
+            "source_title": str(record.get("source_title", "")),
+            "publishers": [str(value) for value in record.get("publishers", [])],
+            "publication_year": record.get("publication_year"),
+            "language": str(record.get("language", "und")),
+            "topics": [str(value) for value in record.get("topics", [])],
+            "source_path": str(record.get("source_path", "")),
         })
         texts.append(text)
     if not texts:
@@ -140,13 +168,16 @@ def build_index(
     for record, vector in zip(clean_records, raw_vectors):
         entries.append({**record, "vector": _normalize(vector)})
 
-    source_sha = sha256_file(source_path)
+    active_paths = list(source_paths) if source_paths is not None else [source_path]
+    source_sha = source_fingerprint(source_path, active_paths)
     index_data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "embedding_provider": "ollama",
         "embedding_endpoint": "/api/embed",
         "embedding_model": model,
         "source_path": str(source_path),
+        "source_paths": [Path(path).name for path in active_paths],
+        "source_count": len(active_paths),
         "source_sha256": source_sha,
         "chunk_count": len(entries),
         "dimensions": len(entries[0]["vector"]),
@@ -165,6 +196,7 @@ def build_index(
         "chunk_count": len(entries),
         "dimensions": index_data["dimensions"],
         "embedding_model": model,
+        "source_count": len(active_paths),
         "source_sha256": source_sha,
     }
 
@@ -172,6 +204,7 @@ def build_index(
 def load_index(
     *,
     source_path: Path,
+    source_paths: Sequence[Path] | None = None,
     index_path: Path = DEFAULT_INDEX_PATH,
     model: str = DEFAULT_MODEL,
 ) -> dict[str, Any] | None:
@@ -180,11 +213,12 @@ def load_index(
         return None
     try:
         index_data = json.loads(index_path.read_text(encoding="utf-8"))
-        if not isinstance(index_data, dict) or index_data.get("schema_version") != 1:
+        if not isinstance(index_data, dict) or index_data.get("schema_version") != 2:
             return None
         if index_data.get("embedding_model") != model:
             return None
-        if index_data.get("source_sha256") != sha256_file(source_path):
+        expected_source_sha = source_fingerprint(source_path, source_paths)
+        if index_data.get("source_sha256") != expected_source_sha:
             return None
 
         entries = index_data.get("entries")
