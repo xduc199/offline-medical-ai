@@ -20,6 +20,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Iterable
 
+from app.query_triage import QueryClass, classify_query
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "knowledge_base" / "03_cleaned" / "WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt"
@@ -618,7 +620,7 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
         elif self.path == "/api/health":
-            self.send_json(200, {"ok": True, "safety_tier": 0, "mode": "document_lookup_only", "model": MODEL, "source_exists": SOURCE_PATH.is_file(), "source_chunks": len(CHUNKS)})
+            self.send_json(200, {"ok": True, "safety_tier": 0, "mode": "document_lookup_with_conservative_triage", "model": MODEL, "source_exists": SOURCE_PATH.is_file(), "source_chunks": len(CHUNKS), "triage_enabled": True, "triage_type": "keyword_rules_unvalidated"})
         else:
             self.send_json(404, {"error": "Not found"})
 
@@ -654,6 +656,35 @@ class Handler(BaseHTTPRequestHandler):
             if not question or len(question) > 2000:
                 self.send_json(400, {"error": "Nhập câu hỏi không quá 2.000 ký tự."})
                 return
+            triage = classify_query(question)
+            if triage.classification == QueryClass.GREETING:
+                self.send_json(200, {
+                    "answer": triage.message,
+                    "warning": "Ứng dụng chỉ tra cứu tài liệu WHO/ICRC BEC 2018.",
+                    "sources": [],
+                    "classification": triage.classification.value,
+                    "matched_terms": list(triage.matched_terms),
+                })
+                return
+            if triage.classification == QueryClass.POSSIBLE_EMERGENCY:
+                self.send_json(200, {
+                    "answer": triage.message,
+                    "warning": "Cảnh báo từ khóa có thể có báo động giả hoặc bỏ sót; không phải đánh giá lâm sàng.",
+                    "sources": [],
+                    "classification": triage.classification.value,
+                    "matched_terms": list(triage.matched_terms),
+                })
+                return
+            if triage.classification == QueryClass.PERSONAL_MEDICAL_ADVICE:
+                self.send_json(200, {
+                    "answer": triage.message,
+                    "warning": "Không đưa ra lời khuyên chẩn đoán hoặc điều trị cá nhân.",
+                    "sources": [],
+                    "classification": triage.classification.value,
+                    "matched_terms": list(triage.matched_terms),
+                })
+                return
+
             found = retrieve(question)
             if not found:
                 self.send_json(200, {
@@ -666,8 +697,17 @@ class Handler(BaseHTTPRequestHandler):
             answer, warning = answer_result if answer_result is not None else call_model(question, found)
             sources = [{"id": f"S{i}", "citation": chunk.citation, "text": chunk.text, "score": score}
                        for i, (chunk, score) in enumerate(found, 1)]
+            if triage.classification == QueryClass.OUT_OF_SCOPE:
+                out_of_scope_warning = (
+                    "Câu hỏi có thể nằm ngoài phạm vi tài liệu đang tích hợp. "
+                    "Câu trả lời (nếu có) chỉ dựa trên các đoạn nguồn đã truy xuất; "
+                    "không suy rộng thành tư vấn y khoa tổng quát."
+                )
+                warning = f"{warning} {out_of_scope_warning}".strip() if warning else out_of_scope_warning
             self.send_json(200, {"answer": answer, "warning": warning, "sources": sources,
-                                 "translation": "", "translation_warning": None})
+                                 "translation": "", "translation_warning": None,
+                                 "classification": triage.classification.value,
+                                 "matched_terms": list(triage.matched_terms)})
         except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
             self.send_json(400, {"error": f"Yêu cầu không hợp lệ: {exc}"})
         except Exception as exc:
