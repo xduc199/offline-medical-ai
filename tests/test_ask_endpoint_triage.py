@@ -52,6 +52,20 @@ class AskEndpointTriageTests(unittest.TestCase):
         self.assertEqual(payload["classification"], "greeting")
         self.assertEqual(payload["sources"], [])
 
+
+    def test_ambiguous_query_short_circuits_retrieval(self):
+        with patch("app.internal_pilot.retrieve", side_effect=AssertionError("retrieval must not run")):
+            payload = self.post_question("??")
+        self.assertEqual(payload["classification"], "ambiguous")
+        self.assertEqual(payload["sources"], [])
+
+    def test_no_source_response_keeps_classification(self):
+        with patch("app.internal_pilot.retrieve", return_value=[]):
+            payload = self.post_question("Tài liệu nêu các bước sơ cứu rắn cắn nào?")
+        self.assertEqual(payload["classification"], "document_lookup")
+        self.assertEqual(payload["sources"], [])
+        self.assertIn("Chưa tìm thấy", payload["answer"])
+
     def test_ask_response_contains_classification_for_document_query(self):
         fake_chunk = type(
             "FakeChunk",
