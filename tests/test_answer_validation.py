@@ -43,6 +43,23 @@ class GroundedAnswerValidationTests(unittest.TestCase):
         self.assertTrue(citations_are_in_range("Có nguồn [S1] và [S2].", ["S1", "S2"]))
         self.assertFalse(citations_are_in_range("Có nguồn [S3].", ["S1", "S2"]))
 
+    def test_accepts_grouped_citations(self):
+        result = validate_grounded_answer("Theo tài liệu, nội dung A và B. [S1, S2]", 2)
+        self.assertTrue(result.accepted)
+        self.assertTrue(citations_are_in_range("Nội dung [S1, S2].", ["S1", "S2"]))
+
+    def test_rejects_invalid_id_inside_grouped_citations(self):
+        result = validate_grounded_answer("Theo tài liệu, nội dung A. [S1, S2]", 1)
+        self.assertFalse(result.accepted)
+        self.assertIn("invalid_citation", result.issues)
+
+    def test_grouped_citation_satisfies_bullet_citation_check(self):
+        result = validate_grounded_answer("- Ý thứ nhất. [S1, S2]", 2)
+        self.assertTrue(result.accepted)
+
+    def test_grouped_citation_with_unknown_id_fails_explicit_source_check(self):
+        self.assertFalse(citations_are_in_range("Nội dung [S1, S3].", ["S1", "S2"]))
+
 
 if __name__ == "__main__":
     unittest.main()
