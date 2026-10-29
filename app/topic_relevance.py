@@ -48,7 +48,14 @@ _PROFILES = (
     {
         "query": ("bong", "burn", "burns"),
         "anchors": ("burn", "burns", "escharotomy", "inhalational injury", "circumferential burn"),
-        "off_topic": (),
+        # Some cleaned table chunks merge the burn row with the following
+        # general shock/trauma row. Exclude those mixed chunks rather than
+        # presenting adjacent bleeding-control or fracture-splinting actions
+        # as burn-specific care. A separate burn passage can still be retained.
+        "off_topic": (
+            "control external bleeding, splint femur/pelvis as indicated",
+            "splint femur/pelvis as indicated",
+        ),
     },
     {
         "query": ("kho tho", "difficulty breathing", "shortness of breath", "dyspnea", "dyspnoea"),

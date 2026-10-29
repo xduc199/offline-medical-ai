@@ -519,6 +519,9 @@ def appears_english(text: str) -> bool:
         "shock", "hypovolaemic", "tachycardia", "tachypnoea", "hypotension", "capillary",
         "perfusion", "diaphoresis", "dizziness", "confusion", "systolic", "bleeding",
         "management", "assessment", "symptoms", "signs", "patient", "breathing",
+        # Catch short untranslated fragments that may otherwise evade the
+        # English-ratio heuristic, e.g. "lú lẫn that gradually improves".
+        "gradually", "responsive", "unresponsive", "hypoglycaemia",
     }
     if untranslated_medical.intersection(words):
         return True

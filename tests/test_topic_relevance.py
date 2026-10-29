@@ -91,6 +91,24 @@ class TopicRelevanceTests(unittest.TestCase):
 
         self.assertEqual(result, [general_bleeding])
 
+
+    def test_burn_question_drops_mixed_chunk_with_adjacent_shock_trauma_actions(self):
+        inhalational_burn = candidate(
+            "Inhalational injuries due to burns can cause swelling of the airway."
+        )
+        mixed_burn_trauma_table = candidate(
+            "Large burns of chest or abdomen: give IV fluids per burn size and oxygen. "
+            "Signs of shock: give oxygen, IV fluids, control external bleeding, "
+            "splint femur/pelvis as indicated."
+        )
+
+        result = filter_topic_candidates(
+            "Tóm tắt các nội dung chính về bỏng trong tài liệu",
+            [inhalational_burn, mixed_burn_trauma_table],
+        )
+
+        self.assertEqual(result, [inhalational_burn])
+
     def test_preserves_candidates_when_no_explicit_anchor_is_recognized(self):
         first = candidate("A passage with unfamiliar wording.", 0.8)
         second = candidate("Another passage with unfamiliar wording.", 0.7)
