@@ -71,6 +71,19 @@ _HEALTH_TERMS = (
 )
 _GREETINGS = {"xin chao", "chao", "hello", "hi", "cam on", "xin cam on"}
 
+# Explicit document phrasing prevents false emergency flags for educational
+# queries such as "theo tài liệu, xử trí khó thở là gì?". These patterns do not
+# override the emergency guard when personal-case language is also present.
+_DOCUMENT_INTENT_PATTERNS = tuple(
+    re.compile(pattern)
+    for pattern in [
+        r"\\btheo tai lieu\\b",
+        r"\\btrong tai lieu\\b",
+        r"\\btai lieu\\b.*\\b(neu|huong dan|trinh bay|mo ta|liet ke|de cap|ghi|co noi)\\b",
+        r"\\b(tom tat|tong hop|giai thich|trinh bay|liet ke)\\b.*\\b(theo tai lieu|trong tai lieu|tai lieu)\\b",
+    ]
+)
+
 
 def classify_query(question: str) -> TriageResult:
     """Return a cautious request-shape label; this is not clinical triage."""
@@ -78,8 +91,13 @@ def classify_query(question: str) -> TriageResult:
     if not normalized:
         return TriageResult(QueryClass.AMBIGUOUS, "Vui lòng nhập câu hỏi.")
 
+    # Distinguish a question ABOUT emergency-care content from a report of an
+    # emergency happening now. Explicit document intent may suppress a lexical
+    # emergency trigger, but never when the text also looks like a personal case.
+    document_intent = any(pattern.search(normalized) for pattern in _DOCUMENT_INTENT_PATTERNS)
+    personal_match = any(pattern.search(normalized) for pattern in _PERSONAL_PATTERNS)
     emergency_matches = tuple(label for label, pattern in _EMERGENCY_PATTERNS if pattern.search(normalized))
-    if emergency_matches:
+    if emergency_matches and (not document_intent or personal_match):
         return TriageResult(
             QueryClass.POSSIBLE_EMERGENCY,
             "Câu hỏi có thể mô tả tình huống nguy hiểm. Nếu tình huống đang xảy ra, hãy liên hệ "
@@ -88,7 +106,7 @@ def classify_query(question: str) -> TriageResult:
             emergency_matches,
         )
 
-    if any(pattern.search(normalized) for pattern in _PERSONAL_PATTERNS):
+    if personal_match:
         return TriageResult(
             QueryClass.PERSONAL_MEDICAL_ADVICE,
             "Ứng dụng hiện chỉ tra cứu tài liệu nguồn, không đủ cơ sở để quyết định chẩn đoán, liều thuốc "
