@@ -9,8 +9,20 @@ class QueryTriageTests(unittest.TestCase):
         self.assertEqual(result.classification, QueryClass.POSSIBLE_EMERGENCY)
         self.assertIn("đừng chờ câu trả lời", result.message)
 
+    def test_emergency_phrase_without_accents(self):
+        result = classify_query("Toi bi dau nguc")
+        self.assertEqual(result.classification, QueryClass.POSSIBLE_EMERGENCY)
+
     def test_personal_medication_question_is_not_answered(self):
         result = classify_query("Tôi có nên uống thêm thuốc không?")
+        self.assertEqual(result.classification, QueryClass.PERSONAL_MEDICAL_ADVICE)
+
+    def test_personal_symptom_question_is_not_treated_as_document_lookup(self):
+        result = classify_query("Tôi đang bị đau bụng")
+        self.assertEqual(result.classification, QueryClass.PERSONAL_MEDICAL_ADVICE)
+
+    def test_family_member_symptom_is_personal_advice(self):
+        result = classify_query("Con tôi đang bị sốt cao")
         self.assertEqual(result.classification, QueryClass.PERSONAL_MEDICAL_ADVICE)
 
     def test_in_scope_first_aid_question(self):
@@ -28,10 +40,6 @@ class QueryTriageTests(unittest.TestCase):
     def test_empty_query_is_ambiguous(self):
         result = classify_query("   ")
         self.assertEqual(result.classification, QueryClass.AMBIGUOUS)
-
-    def test_emergency_phrase_without_accents(self):
-        result = classify_query("Toi bi dau nguc")
-        self.assertEqual(result.classification, QueryClass.POSSIBLE_EMERGENCY)
 
 
 if __name__ == "__main__":
