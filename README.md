@@ -1,6 +1,4 @@
-# Trợ lý AI y tế ngoại tuyến
-
-> **Nghiên cứu và xây dựng trợ lý AI chạy cục bộ, hỗ trợ tra cứu kiến thức cấp cứu cơ bản từ tài liệu WHO/ICRC khi không có Internet.**
+# Nghiên cứu và xây dựng hệ thống trợ lý AI ngoại tuyến hỗ trợ chẩn đoán y tế cơ sở và sơ cứu trong điều kiện không có kết nối Internet
 
 <p align="center"><b>Truy xuất có nguồn · Chạy trên máy cá nhân · Có công cụ đánh giá</b></p>
 
