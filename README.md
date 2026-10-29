@@ -397,6 +397,24 @@ Các tuỳ chọn liên quan:
 
 Muốn chạy chỉ bằng từ khóa, trỏ `BEC_VECTOR_INDEX_PATH` đến đường dẫn chưa tồn tại trước khi khởi động app hoặc không tạo chỉ mục. Các embedding và truy vấn được gửi tới Ollama cục bộ, không phải dịch vụ embedding trên đám mây. Xem tài liệu [Ollama Embeddings](https://github.com/ollama/ollama/blob/main/docs/capabilities/embeddings.mdx) và model [BGE-M3 trên Ollama](https://ollama.com/library/bge-m3).
 
+### Đánh giá truy xuất bằng Recall@k và MRR
+
+Dự án có script benchmark chỉ đánh giá bước truy xuất, không gọi LLM để sinh câu trả lời. Bộ mặc định là `tests/broad_questions_vi.json`; nhãn hiện có là trang PDF mục tiêu, không phải nhãn đầy đủ cho từng đoạn văn.
+
+Chạy đối chứng từ khóa, không cần model embedding:
+
+```powershell
+python -m tests.evaluate_retrieval --method keyword --top-k 5
+```
+
+Sau khi đã tạo chỉ mục embedding và khởi động được Ollama, so sánh cả ba phương pháp trên cùng bộ câu hỏi:
+
+```powershell
+python -m tests.evaluate_retrieval --method all --require-semantic --top-k 5 --output reports/retrieval_metrics.json
+```
+
+Báo cáo gồm Recall@k theo trang, MRR (vị trí của kết quả liên quan đầu tiên), HitRate@k, độ trễ và chi tiết kết quả từng câu. Các câu không có trang đích được ghi nhận là chưa có nhãn và không được tính vào trung bình. Nên rà soát nhãn trang trước khi diễn giải kết quả; các chỉ số này không đo độ đúng của câu trả lời hay độ an toàn lâm sàng.
+
 ### Kiểm thử tự động
 
 Chạy hai nhóm kiểm thử từ thư mục gốc:
