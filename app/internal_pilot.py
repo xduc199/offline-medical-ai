@@ -30,6 +30,27 @@ except ModuleNotFoundError as exc:
         raise
     from query_triage import QueryClass, classify_query
 
+try:
+    from app.semantic_retrieval import (
+        DEFAULT_INDEX_PATH,
+        DEFAULT_MODEL as DEFAULT_EMBEDDING_MODEL,
+        EmbeddingError,
+        fuse_with_chunks,
+        load_index,
+        semantic_search,
+    )
+except ModuleNotFoundError as exc:
+    if exc.name != "app":
+        raise
+    from semantic_retrieval import (
+        DEFAULT_INDEX_PATH,
+        DEFAULT_MODEL as DEFAULT_EMBEDDING_MODEL,
+        EmbeddingError,
+        fuse_with_chunks,
+        load_index,
+        semantic_search,
+    )
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "knowledge_base" / "03_cleaned" / "WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt"
@@ -151,6 +172,30 @@ def load_chunks() -> tuple[str, list[Chunk]]:
 
 SOURCE_TEXT, CHUNKS = load_chunks()
 
+# Dense retrieval is optional. Without a valid generated index (default), the
+# application keeps the original keyword retrieval path and requires no embed model.
+EMBEDDING_MODEL = os.environ.get("BEC_EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL)
+SEMANTIC_MIN_SCORE = float(os.environ.get("BEC_SEMANTIC_MIN_SCORE", "0.35"))
+SEMANTIC_INDEX = load_index(
+    source_path=SOURCE_PATH,
+    index_path=DEFAULT_INDEX_PATH,
+    model=EMBEDDING_MODEL,
+)
+_RETRIEVAL_CONTEXT = threading.local()
+
+
+def _set_retrieval_diagnostics(mode: str, warning: str | None = None) -> None:
+    _RETRIEVAL_CONTEXT.mode = mode
+    _RETRIEVAL_CONTEXT.warning = warning
+
+
+def get_retrieval_diagnostics() -> dict[str, str | None]:
+    return {
+        "mode": getattr(_RETRIEVAL_CONTEXT, "mode", "keyword"),
+        "warning": getattr(_RETRIEVAL_CONTEXT, "warning", None),
+    }
+
+
 # Build retrieval statistics once at startup instead of retokenizing all 1,496
 # chunks for every question.
 CHUNK_TERMS = [terms(chunk.text) for chunk in CHUNKS]
@@ -179,7 +224,7 @@ def expand_query(query: str) -> list[str]:
     return list(dict.fromkeys(terms(" ".join(expanded))))
 
 
-def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
+def keyword_retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
     qterms = list(dict.fromkeys(expand_query(query)))
     if not qterms:
         return []
@@ -216,6 +261,64 @@ def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
     minimum = 1 if len(qterms) <= 2 else 2
     if len(matched) < minimum or best[1] < 0.55:
         return []
+    return chosen
+
+
+def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
+    """Use dense+keyword retrieval when a matching local index exists; otherwise fall back."""
+    keyword_results = keyword_retrieve(query, limit=max(8, limit * 4))
+    if SEMANTIC_INDEX is None:
+        _set_retrieval_diagnostics("keyword")
+        return keyword_results[:limit]
+
+    try:
+        semantic_results = semantic_search(
+            query,
+            SEMANTIC_INDEX,
+            ollama_url=OLLAMA_URL,
+            limit=max(8, limit * 4),
+        )
+    except (EmbeddingError, ValueError) as exc:
+        _set_retrieval_diagnostics(
+            "keyword_fallback",
+            f"Embedding cục bộ không khả dụng; đã chuyển sang tìm kiếm từ khóa. Chi tiết: {exc}",
+        )
+        return keyword_results[:limit]
+
+    if not semantic_results or semantic_results[0][1] < SEMANTIC_MIN_SCORE:
+        _set_retrieval_diagnostics(
+            "keyword_fallback",
+            "Điểm tương đồng ngữ nghĩa thấp hơn ngưỡng cấu hình; đã dùng tìm kiếm từ khóa. "
+            "Ngưỡng này cần được hiệu chỉnh bằng bộ kiểm thử của dự án.",
+        )
+        return keyword_results[:limit]
+
+    chunks_by_index = {chunk.index: chunk for chunk in CHUNKS}
+    fused = fuse_with_chunks(
+        keyword_results,
+        semantic_results,
+        chunks_by_index,
+        limit=max(limit * 4, 8),
+    )
+    if not fused:
+        _set_retrieval_diagnostics("keyword_fallback", "Không hợp nhất được kết quả; đã dùng tìm kiếm từ khóa.")
+        return keyword_results[:limit]
+
+    chosen: list[tuple[Chunk, float]] = []
+    seen_regions: set[tuple[str, int]] = set()
+    for chunk, score in fused:
+        region = (chunk.page, chunk.start_line // 12)
+        if region in seen_regions:
+            continue
+        chosen.append((chunk, score))
+        seen_regions.add(region)
+        if len(chosen) >= limit:
+            break
+    if not chosen:
+        _set_retrieval_diagnostics("keyword_fallback", "Không có đoạn phù hợp sau lọc; đã dùng tìm kiếm từ khóa.")
+        return keyword_results[:limit]
+
+    _set_retrieval_diagnostics("hybrid_rrf")
     return chosen
 
 
@@ -628,7 +731,21 @@ class Handler(BaseHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
         elif self.path == "/api/health":
-            self.send_json(200, {"ok": True, "safety_tier": 0, "mode": "document_lookup_with_conservative_triage", "model": MODEL, "source_exists": SOURCE_PATH.is_file(), "source_chunks": len(CHUNKS), "triage_enabled": True, "triage_type": "keyword_rules_unvalidated"})
+            self.send_json(200, {
+                "ok": True,
+                "safety_tier": 0,
+                "mode": "document_lookup_with_conservative_triage",
+                "model": MODEL,
+                "source_exists": SOURCE_PATH.is_file(),
+                "source_chunks": len(CHUNKS),
+                "triage_enabled": True,
+                "triage_type": "keyword_rules_unvalidated",
+                "retrieval_mode": "hybrid_rrf" if SEMANTIC_INDEX is not None else "keyword",
+                "semantic_index_loaded": SEMANTIC_INDEX is not None,
+                "embedding_model": EMBEDDING_MODEL if SEMANTIC_INDEX is not None else None,
+                "semantic_index_path": str(DEFAULT_INDEX_PATH),
+                "semantic_min_score": SEMANTIC_MIN_SCORE,
+            })
         else:
             self.send_json(404, {"error": "Not found"})
 
@@ -702,7 +819,9 @@ class Handler(BaseHTTPRequestHandler):
                 })
                 return
 
+            _set_retrieval_diagnostics("keyword")
             found = retrieve(question)
+            retrieval_info = get_retrieval_diagnostics()
             if not found:
                 self.send_json(200, {
                     "answer": "Chưa tìm thấy đoạn đủ liên quan trong tài liệu. Hãy diễn đạt lại câu hỏi hoặc tra cứu trực tiếp tài liệu nguồn.",
@@ -710,6 +829,7 @@ class Handler(BaseHTTPRequestHandler):
                     "sources": [],
                     "classification": triage.classification.value,
                     "matched_terms": list(triage.matched_terms),
+                    "retrieval": retrieval_info,
                 })
                 return
             answer_result = source_list_answer(question, found)
@@ -723,10 +843,13 @@ class Handler(BaseHTTPRequestHandler):
                     "không suy rộng thành tư vấn y khoa tổng quát."
                 )
                 warning = f"{warning} {out_of_scope_warning}".strip() if warning else out_of_scope_warning
+            if retrieval_info.get("warning"):
+                warning = f"{warning} {retrieval_info['warning']}".strip() if warning else retrieval_info["warning"]
             self.send_json(200, {"answer": answer, "warning": warning, "sources": sources,
                                  "translation": "", "translation_warning": None,
                                  "classification": triage.classification.value,
-                                 "matched_terms": list(triage.matched_terms)})
+                                 "matched_terms": list(triage.matched_terms),
+                                 "retrieval": retrieval_info})
         except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as exc:
             self.send_json(400, {"error": f"Yêu cầu không hợp lệ: {exc}"})
         except Exception as exc:
