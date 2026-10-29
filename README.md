@@ -362,6 +362,41 @@ Các nhánh lời chào, câu hỏi cá nhân, tình huống có thể nguy hi�
 
 **Giới hạn an toàn:** đây chỉ là bộ lọc từ khóa thử nghiệm, không phải hệ thống phân loại cấp cứu đã được kiểm định. Nó có thể báo động giả hoặc bỏ sót; việc không phát hiện từ khóa không có nghĩa là người dùng an toàn. Không dùng ứng dụng để chẩn đoán, kê đơn, phân loại cấp cứu hay quyết định xử trí người bệnh.
 
+### Truy xuất ngữ nghĩa tùy chọn (embedding + RRF)
+
+Bản phát triển có thêm một đường truy xuất ngữ nghĩa cục bộ qua Ollama. Khi chỉ mục vector tương thích đã tồn tại, ứng dụng hợp nhất kết quả từ khóa và kết quả vector bằng **Reciprocal Rank Fusion (RRF — hợp nhất thứ hạng)**. Khi chưa có chỉ mục, model embedding không khả dụng hoặc điểm tương đồng thấp hơn ngưỡng, ứng dụng quay về tìm kiếm từ khóa và đưa cảnh báo trong phản hồi API.
+
+Đây là cơ chế thử nghiệm, chưa có benchmark để khẳng định chính xác hơn cách truy xuất từ khóa. Ngưỡng mặc định `BEC_SEMANTIC_MIN_SCORE=0.35` mới là giá trị khởi đầu cần hiệu chỉnh bằng bộ câu hỏi tham chiếu. Không xem điểm tương đồng là xác suất đúng y khoa.
+
+**Thiết lập lần đầu** (cần Internet để tải model nếu máy chưa có):
+
+```powershell
+ollama pull bge-m3
+python -m app.build_vector_index --model bge-m3 --batch-size 16
+```
+
+Lệnh tạo chỉ mục cho các đoạn trong tệp tri thức đã làm sạch, gọi API embedding cục bộ `/api/embed` theo lô, và lưu chỉ mục vào `vector_db/who_icrc_bec_bge_m3.json`. Thư mục `vector_db/` đã được Git bỏ qua; tệp chỉ mục không được commit lên repo. Thời gian tạo chỉ mục phụ thuộc cấu hình máy và tốc độ xử lý của Ollama.
+
+Sau đó chạy ứng dụng như thường lệ:
+
+```powershell
+python .\\app\\internal_pilot.py
+```
+
+Kiểm tra `http://127.0.0.1:8765/api/health`. Trường `semantic_index_loaded` cần là `true` và `retrieval_mode` là `hybrid_rrf` để xác nhận app đã nạp chỉ mục. Nếu là `false`, app đang chạy chế độ từ khóa. Chỉ mục tự bị từ chối nếu checksum của tài liệu nguồn hoặc tên model embedding không khớp; khi đó cần tạo lại bằng lệnh trên.
+
+Các tuỳ chọn liên quan:
+
+| Biến môi trường | Mặc định | Ý nghĩa |
+|---|---|---|
+| `BEC_EMBEDDING_MODEL` | `bge-m3` | Model Ollama dùng cho embedding, phải giống model đã tạo chỉ mục |
+| `BEC_VECTOR_INDEX_PATH` | `vector_db/who_icrc_bec_bge_m3.json` | Đường dẫn chỉ mục cục bộ |
+| `BEC_EMBED_BATCH_SIZE` | `16` | Số đoạn gửi trong mỗi batch khi tạo chỉ mục |
+| `BEC_EMBED_TIMEOUT` | `180` giây | Timeout từng yêu cầu embedding |
+| `BEC_SEMANTIC_MIN_SCORE` | `0.35` | Ngưỡng cosine similarity thử nghiệm trước khi dùng hợp nhất thứ hạng |
+
+Muốn chạy chỉ bằng từ khóa, trỏ `BEC_VECTOR_INDEX_PATH` đến đường dẫn chưa tồn tại trước khi khởi động app hoặc không tạo chỉ mục. Các embedding và truy vấn được gửi tới Ollama cục bộ, không phải dịch vụ embedding trên đám mây. Xem tài liệu [Ollama Embeddings](https://github.com/ollama/ollama/blob/main/docs/capabilities/embeddings.mdx) và model [BGE-M3 trên Ollama](https://ollama.com/library/bge-m3).
+
 ### Kiểm thử tự động
 
 Chạy hai nhóm kiểm thử từ thư mục gốc:
@@ -457,8 +492,8 @@ Tuy vậy, điều này không phải cam kết bảo mật toàn diện: hệ �
 Các mục dưới đây là **đề xuất nghiên cứu**, không phải chức năng đã hoàn thành:
 
 - [ ] Chuẩn hóa cấu trúc kho dữ liệu, loại bỏ bản trung gian trùng lặp khỏi luồng sử dụng chính và lập danh mục nguồn.
-- [ ] Thiết kế truy xuất kết hợp từ khóa và ngữ nghĩa, đo lường chất lượng lấy đoạn trước khi chọn phương án.
-- [ ] Bổ sung phân loại câu hỏi: trong phạm vi / ngoài phạm vi / mơ hồ / tình huống có nguy cơ cao.
+- [x] Có prototype truy xuất kết hợp từ khóa + embedding/RRF và cơ chế rơi về từ khóa; [ ] benchmark Recall@k/MRR và hiệu chỉnh ngưỡng trên bộ câu hỏi tham chiếu.
+- [x] Có bộ phân loại yêu cầu theo quy tắc từ khóa và tích hợp vào `/api/ask`; [ ] đánh giá độ bao phủ/false positive/false negative trên bộ kiểm thử mở rộng do chuyên môn rà soát.
 - [ ] Xây dựng lớp an toàn dựa trên quy tắc kiểm tra được, ưu tiên nhận diện dấu hiệu cảnh báo và khuyến nghị liên hệ trợ giúp phù hợp; không giao toàn bộ quyết định an toàn cho LLM.
 - [ ] Tăng khả năng truy nguyên: lưu phiên bản nguồn, trang, vị trí đoạn, thời điểm rà soát và liên kết giữa từng ý trả lời với bằng chứng.
 - [ ] Xây dựng bộ đánh giá có đáp án tham chiếu, chấm độ đúng nguồn, độ đầy đủ, mức bịa thông tin, độ an toàn, độ trễ và nhu cầu tài nguyên.
