@@ -24,7 +24,7 @@ BEHAVIORS = {"answer", "caution", "refuse"}
 
 def validate_review_data(data: Any) -> list[dict[str, Any]]:
     """Validate the review schema and return records in their original order."""
-    if not isinstance(data, dict) or data.get("schema_version") != 1:
+    if not isinstance(data, dict) or type(data.get("schema_version")) is not int or data.get("schema_version") != 1:
         raise ValueError("Input must be an object with schema_version=1.")
     records = data.get("records")
     if not isinstance(records, list) or not records:
@@ -47,7 +47,7 @@ def validate_review_data(data: Any) -> list[dict[str, Any]]:
                 raise ValueError(f"{label}.{field} must be a non-empty string.")
 
         for field in ("expected_behavior", "observed_behavior"):
-            if record.get(field) not in BEHAVIORS:
+            if not isinstance(record.get(field), str) or record.get(field) not in BEHAVIORS:
                 raise ValueError(
                     f"{label}.{field} must be one of: {', '.join(sorted(BEHAVIORS))}."
                 )
