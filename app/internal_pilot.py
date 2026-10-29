@@ -665,6 +665,15 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_json(400, {"error": "Nhập câu hỏi không quá 2.000 ký tự."})
                 return
             triage = classify_query(question)
+            if triage.classification == QueryClass.AMBIGUOUS:
+                self.send_json(200, {
+                    "answer": triage.message,
+                    "warning": "Hãy làm rõ câu hỏi trước khi tra cứu; chưa truy xuất hoặc gọi mô hình.",
+                    "sources": [],
+                    "classification": triage.classification.value,
+                    "matched_terms": list(triage.matched_terms),
+                })
+                return
             if triage.classification == QueryClass.GREETING:
                 self.send_json(200, {
                     "answer": triage.message,
@@ -699,6 +708,8 @@ class Handler(BaseHTTPRequestHandler):
                     "answer": "Chưa tìm thấy đoạn đủ liên quan trong tài liệu. Hãy diễn đạt lại câu hỏi hoặc tra cứu trực tiếp tài liệu nguồn.",
                     "warning": "Không gọi mô hình vì mức phù hợp của kết quả tìm kiếm thấp.",
                     "sources": [],
+                    "classification": triage.classification.value,
+                    "matched_terms": list(triage.matched_terms),
                 })
                 return
             answer_result = source_list_answer(question, found)
