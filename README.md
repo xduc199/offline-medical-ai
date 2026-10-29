@@ -1,547 +1,404 @@
 # 🩺 Trợ lý AI y tế ngoại tuyến
 
-> **Nghiên cứu, xây dựng hệ thống trợ lý AI ngoại tuyến hỗ trợ tra cứu kiến thức cấp cứu cơ bản và sơ cứu khi không có kết nối Internet.**
+> **Nghiên cứu và xây dựng trợ lý AI chạy cục bộ, hỗ trợ tra cứu kiến thức cấp cứu cơ bản từ tài liệu WHO/ICRC khi không có Internet.**
 
 <p align="center">
   <img src="https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white" alt="Python 3.12+" />
   <img src="https://img.shields.io/badge/LLM-Ollama-111111?logo=ollama&logoColor=white" alt="Ollama" />
-  <img src="https://img.shields.io/badge/Ch%E1%BA%BF%20%C4%91%E1%BB%99-Offline%20Local-16803C" alt="Chạy cục bộ" />
-  <img src="https://img.shields.io/badge/Tr%E1%BA%A1ng%20th%C3%A1i-Prototype%20n%E1%BB%99i%20b%E1%BB%99-orange" alt="Prototype nội bộ" />
+  <img src="https://img.shields.io/badge/Execution-Local%20%7C%20Offline-16803C" alt="Chạy cục bộ" />
+  <img src="https://img.shields.io/badge/Status-Research%20Prototype-orange" alt="Bản thử nghiệm nghiên cứu" />
 </p>
 
 <p align="center">
-  <b>🌐 Không cần gọi dịch vụ AI trên đám mây · 📚 Có hiển thị đoạn nguồn · 🔎 Dùng được để thử nghiệm tra cứu tài liệu</b>
+  <b>📚 Truy xuất có nguồn · 🖥️ Chạy trên máy cá nhân · 🔎 Có công cụ đánh giá</b>
 </p>
 
----
-
-## 📌 Mục lục
-
-- [🎯 Giới thiệu](#-giới-thiệu)
-- [🧭 Trạng thái hiện tại](#-trạng-thái-hiện-tại)
-- [🧠 Hệ thống hoạt động như thế nào?](#-hệ-thống-hoạt-động-như-thế-nào)
-- [🗂️ Cấu trúc dự án](#️-cấu-trúc-dự-án)
-- [💻 Yêu cầu môi trường](#-yêu-cầu-môi-trường)
-- [🚀 Cài đặt và chạy](#-cài-đặt-và-chạy)
-- [💬 Cách sử dụng ứng dụng](#-cách-sử-dụng-ứng-dụng)
-- [🧪 Chạy bộ câu hỏi kiểm thử](#-chạy-bộ-câu-hỏi-kiểm-thử)
-- [⚙️ Cấu hình](#️-cấu-hình)
-- [🩹 Xử lý lỗi thường gặp](#-xử-lý-lỗi-thường-gặp)
-- [🛡️ An toàn, quyền riêng tư và phạm vi sử dụng](#️-an-toàn-quyền-riêng-tư-và-phạm-vi-sử-dụng)
-- [🧱 Hạn chế hiện tại](#-hạn-chế-hiện-tại)
-- [🛣️ Hướng phát triển](#️-hướng-phát-triển)
-- [📚 Nguồn tài liệu](#-nguồn-tài-liệu)
-- [🤝 Đóng góp và phản hồi](#-đóng-góp-và-phản-hồi)
+<p align="center">
+  <a href="#-giới-thiệu">Giới thiệu</a> ·
+  <a href="#-cài-đặt">Cài đặt</a> ·
+  <a href="#-sử-dụng">Sử dụng</a> ·
+  <a href="#-đánh-giá">Đánh giá</a> ·
+  <a href="#-an-toàn-và-giới-hạn">An toàn & giới hạn</a>
+</p>
 
 ---
 
 ## 🎯 Giới thiệu
 
-**offline-medical-ai** là dự án nghiên cứu xây dựng một trợ lý AI chạy trên máy tính cá nhân, hướng tới hỗ trợ tiếp cận kiến thức y tế cơ sở và sơ cứu trong môi trường không có Internet.
+**offline-medical-ai** là dự án nghiên cứu một trợ lý hỏi đáp dựa trên tài liệu (document-grounded QA — tạo câu trả lời dựa trên nguồn được truy xuất), hướng tới môi trường không có kết nối Internet.
 
-Phiên bản hiện có tập trung vào một nhiệm vụ hẹp và có thể kiểm tra được: **tra cứu, trích xuất và diễn đạt lại thông tin từ tài liệu huấn luyện cấp cứu cơ bản WHO/ICRC Basic Emergency Care (2018)**. Ứng dụng sử dụng một mô hình ngôn ngữ chạy cục bộ thông qua Ollama và hiển thị các đoạn nguồn được truy xuất để người dùng đối chiếu.
+Bản thử nghiệm tập trung vào tài liệu **WHO/ICRC *Basic Emergency Care: Approach to the Acutely Ill and Injured* (2018)**. Ứng dụng truy xuất đoạn văn bản liên quan, có thể chuyển nội dung sang mô hình ngôn ngữ chạy cục bộ qua Ollama và hiển thị nguồn để người dùng đối chiếu.
 
-### Mục tiêu nghiên cứu
+### Mục tiêu
 
-- 📴 Khảo sát khả năng chạy mô hình ngôn ngữ lớn (LLM — Large Language Model) hoàn toàn trên máy cá nhân.
-- 📚 Xây dựng bước xử lý tài liệu: văn bản trích xuất, làm sạch và chia thành các đoạn có thông tin trang/dòng.
-- 🔎 Thử nghiệm truy xuất thông tin (retrieval) từ kho tài liệu trước khi tạo câu trả lời.
-- 🧾 Hiển thị đoạn nguồn để hỗ trợ kiểm tra tính phù hợp của câu trả lời.
-- 🧪 Tạo bộ câu hỏi để đánh giá thủ công khả năng tìm đúng nguồn, mức đầy đủ và các lỗi cần xử lý.
+- Khảo sát khả năng chạy mô hình ngôn ngữ lớn (LLM — Large Language Model) trên máy cá nhân.
+- Xử lý tài liệu thành văn bản có thể tìm kiếm, giữ thông tin tham chiếu trang/dòng.
+- Thử nghiệm truy xuất theo từ khóa và, trong phiên bản có chỉ mục phù hợp, truy xuất kết hợp ngữ nghĩa.
+- Hiển thị bằng chứng truy xuất và rà soát một số lỗi đầu ra.
+- Xây dựng bộ câu hỏi và chỉ số để đánh giá bước truy xuất.
 
-> **Lưu ý quan trọng:** phiên bản hiện tại là bản thử nghiệm tra cứu tài liệu (prototype), không phải hệ thống chẩn đoán, phân loại mức độ cấp cứu hoặc đưa ra quyết định điều trị cho một ca bệnh cụ thể.
+> **Phạm vi:** đây là prototype phục vụ nghiên cứu và thử nghiệm kỹ thuật, không phải sản phẩm y tế đã được thẩm định.
 
-## 🧭 Trạng thái hiện tại
+## 🧭 Trạng thái chức năng
 
-| Hạng mục | Trạng thái đã xác minh trong mã nguồn |
+| Thành phần | Trạng thái được mô tả trong dự án |
 |---|---|
-| Giao diện web đơn giản | ✅ Có, được nhúng trực tiếp trong `app/internal_pilot.py` |
-| Máy chủ HTTP cục bộ | ✅ Có, sử dụng thư viện chuẩn của Python |
-| Chạy mô hình qua Ollama | ✅ Có tích hợp API cục bộ |
-| Kho văn bản WHO/ICRC BEC 2018 đã làm sạch | ✅ Có tệp được ứng dụng đọc khi khởi động |
-| Truy xuất theo từ khóa và mở rộng một số cụm tiếng Việt sang tiếng Anh | ✅ Có |
-| Hiển thị đoạn nguồn và vị trí tham chiếu | ✅ Có |
-| Dịch các đoạn nguồn đã tìm thấy khi người dùng bấm nút | ✅ Có, bản dịch tự động cần đối chiếu |
-| Bộ câu hỏi thử nghiệm và chương trình gọi thử API | ✅ Có |
-| Tìm kiếm ngữ nghĩa bằng embedding/vector database | ❌ Chưa được triển khai trong ứng dụng hiện tại |
-| Bộ phân loại câu hỏi y tế/phi y tế, phân loại cấp cứu | ❌ Chưa được triển khai như một lớp độc lập |
-| Hệ thống hỗ trợ quyết định lâm sàng đã được thẩm định | ❌ Không có |
-| Chứng nhận an toàn y tế | ❌ Không có |
+| Giao diện web và HTTP API cục bộ | Đã có trong `app/internal_pilot.py` |
+| Kết nối Ollama cục bộ | Đã tích hợp; cần cài và tải model trên máy |
+| Truy xuất từ khóa và hiển thị nguồn | Đã có |
+| Quy tắc phân loại yêu cầu | Có prototype dựa trên từ khóa; chưa phải bộ phân loại y tế đã kiểm định |
+| Truy xuất embedding + RRF | Có đường xử lý tùy chọn; cần chỉ mục hợp lệ để sử dụng |
+| Benchmark Recall@k/MRR | Có script đánh giá truy xuất |
+| Đánh giá độ đúng và an toàn lâm sàng độc lập | Chưa được xác lập |
 
-Trạng thái này mô tả mã nguồn hiện có, không phải lời khẳng định về độ chính xác hay mức an toàn lâm sàng.
+Các trạng thái trên là mô tả kỹ thuật của mã nguồn, không phải bằng chứng về độ chính xác y khoa. Kết quả thực tế cần kiểm tra trên đúng commit và môi trường triển khai.
 
-## 🧠 Hệ thống hoạt động như thế nào?
-
-Ở phiên bản hiện tại, luồng chính diễn ra như sau:
+## 🧠 Kiến trúc tổng quát
 
 ```text
-Người dùng nhập câu hỏi tiếng Việt
-                │
-                ▼
-Chuẩn hóa từ và mở rộng một số cụm tiếng Việt → tiếng Anh
-                │
-                ▼
-Tìm, chấm điểm và chọn tối đa 2 đoạn trong văn bản đã làm sạch
-                │
-       ┌────────┴─────────┐
-       │                  │
-Không đủ phù hợp     Có đoạn phù hợp
-       │                  │
-       ▼                  ▼
-Thông báo chưa tìm   Trả lời theo mẫu đặc biệt
-được nguồn phù hợp   hoặc gọi Ollama cục bộ
-                          │
-                          ▼
-             Kiểm tra một số lỗi đầu ra,
-             mã trích dẫn và cách diễn đạt
-                          │
-                          ▼
-             Hiển thị câu trả lời và đoạn nguồn
-                          │
-                          ▼
-       Người dùng đối chiếu nguyên văn tài liệu
+Câu hỏi tiếng Việt
+       │
+       ▼
+Chuẩn hóa / phân loại theo quy tắc
+       │
+       ▼
+Truy xuất đoạn nguồn từ kho tài liệu
+       │
+       ├── Không đủ nguồn phù hợp ──► Thông báo chưa đủ bằng chứng
+       │
+       ▼
+Xây dựng ngữ cảnh + gọi Ollama cục bộ
+       │
+       ▼
+Kiểm tra một số lỗi hình thức / tham chiếu
+       │
+       ▼
+Câu trả lời + đoạn nguồn để đối chiếu
 ```
 
-### Các thành phần chính
-
-1. **Kho tài liệu:** tệp văn bản đã làm sạch của WHO/ICRC Basic Emergency Care (2018).
-2. **Bộ truy xuất từ khóa:** chuẩn hóa chữ, tách từ, dùng trọng số và một bảng mở rộng nhỏ cho một số cách hỏi tiếng Việt. Đây **không phải** bộ tìm kiếm ngữ nghĩa.
-3. **Ollama:** cung cấp API cục bộ cho mô hình `qwen2.5:7b-instruct-q4_K_M` theo cấu hình mặc định.
-4. **Lớp kiểm tra đầu ra:** kiểm tra một số dấu hiệu hình thức như mã trích dẫn không hợp lệ, văn bản lặp hoặc còn nhiều tiếng Anh. Các kiểm tra này không thể chứng minh nội dung đúng về y khoa.
-5. **Giao diện web:** nhận câu hỏi, hiển thị câu trả lời, đoạn nguồn và cung cấp nút dịch đoạn nguồn.
-6. **Bộ kiểm thử thủ công:** gửi các câu hỏi mẫu đến API đang chạy, in thời gian phản hồi và nguồn được truy xuất để người đánh giá xem lại.
+Tùy cấu hình, bước truy xuất có thể dùng từ khóa hoặc hợp nhất thứ hạng từ khóa và vector bằng **Reciprocal Rank Fusion (RRF — hợp nhất thứ hạng)**. Điểm tương đồng và mã trích dẫn không tự chứng minh nội dung là đúng.
 
 ## 🗂️ Cấu trúc dự án
 
-Các tệp quan trọng đối với việc chạy bản thử nghiệm:
+Một số đường dẫn chính:
 
 ```text
 offline-medical-ai/
-├── README.md
-├── .gitignore
 ├── app/
 │   ├── internal_pilot.py
 │   ├── README_internal_pilot.md
-│   └── evaluation_questions.json
+│   ├── evaluation_questions.json
+│   └── ...
 ├── knowledge_base/
-│   ├── 01_raw/
-│   │   └── WHO/
-│   │       └── WHO_ICRC_Basic_Emergency_Care_2018.pdf
-│   ├── 02_extracted/
-│   │   └── các bản văn bản trích xuất từ PDF
-│   ├── 03_cleaned/
-│   │   └── WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt
+│   ├── 01_raw/       # Tài liệu đầu vào
+│   ├── 02_extracted/ # Văn bản trích xuất
+│   ├── 03_cleaned/   # Văn bản đã làm sạch
 │   └── 05_evaluation/
-├── tests/
-│   ├── broad_questions_vi.json
-│   └── run_broad_questions.py
-└── reports/
-    └── các báo cáo rà soát và xử lý dữ liệu
+├── tests/            # Bộ câu hỏi, benchmark và kiểm thử
+├── reports/          # Báo cáo đánh giá / rà soát
+└── README.md
 ```
 
-> Thư mục `knowledge_base/03_cleaned/` hiện có nhiều tệp trung gian của quá trình xử lý văn bản. Ứng dụng chỉ đọc tệp `WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt` nêu trên; các tệp có hậu tố `before_...` không phải tất cả đều cần để khởi chạy. Có thể cần tổ chức lại chúng khi chuẩn hóa kho dữ liệu.
+Ứng dụng cần tệp văn bản đã làm sạch tại:
 
-## 💻 Yêu cầu môi trường
+`knowledge_base/03_cleaned/WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt`
 
-| Thành phần | Yêu cầu |
-|---|---|
-| Hệ điều hành | Windows có PowerShell; có thể chạy trên hệ điều hành khác nếu cài đủ môi trường tương thích |
-| Python | **3.12 trở lên** theo hướng dẫn bản thử nghiệm |
-| Ollama | Cài đặt và dịch vụ cục bộ đang chạy |
-| Mô hình | `qwen2.5:7b-instruct-q4_K_M` theo mặc định |
-| Tài liệu đầu vào | Tệp `knowledge_base/03_cleaned/WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt` phải tồn tại |
-| Kết nối Internet | Không cần trong lúc sử dụng sau khi đã cài Python, Ollama, tải mô hình và chuẩn bị dữ liệu |
+Các thư mục và tệp phụ có thể thay đổi theo phiên bản. Nếu đường dẫn không tồn tại trong bản clone của bạn, hãy kiểm tra cây thư mục và cấu hình được mã nguồn hiện tại sử dụng.
 
-**Lưu ý về tài nguyên:** mô hình 7B có thể cần dung lượng bộ nhớ và dung lượng lưu trữ đáng kể. Nhu cầu thực tế tùy cấu hình máy, cách lượng tử hóa, số luồng và tải đang chạy. README này không tuyên bố một cấu hình phần cứng tối thiểu đã được đo kiểm.
+## 💻 Yêu cầu
 
-## 🚀 Cài đặt và chạy
+- Windows + PowerShell là môi trường hướng dẫn chính; hệ điều hành khác cần điều chỉnh lệnh tương ứng.
+- Python 3.12 trở lên theo cấu hình hướng dẫn hiện tại.
+- [Ollama](https://ollama.com/) đã cài đặt và chạy trên máy.
+- Model mặc định: `qwen2.5:7b-instruct-q4_K_M`.
+- Tệp dữ liệu đã làm sạch nêu trên có mặt trong cây dự án.
 
-### Bước 1 — Lấy mã nguồn
+Model 7B cần tài nguyên bộ nhớ và lưu trữ đáng kể. Hiệu năng phụ thuộc phần cứng, lượng tử hóa, thiết lập runtime và độ dài ngữ cảnh; cấu hình tối thiểu chưa được xác lập trong README này.
 
-Mở PowerShell tại nơi bạn muốn lưu dự án, sau đó chạy:
+## 🚀 Cài đặt
+
+### 1. Clone repository
 
 ```powershell
 git clone https://github.com/xduc199/offline-medical-ai.git
 cd offline-medical-ai
 ```
 
-Nếu bạn đã có dự án trên máy, chuyển đến thư mục dự án đó thay vì clone thêm một bản.
+Nếu dự án đã có trên máy, chuyển đến thư mục dự án hiện tại thay vì clone thêm một bản.
 
-### Bước 2 — Kiểm tra Python
+### 2. Kiểm tra Python
 
 ```powershell
 python --version
 ```
 
-Phiên bản cần đáp ứng Python 3.12 trở lên. Nếu lệnh `python` không được nhận diện, cài Python và bảo đảm trình cài đặt đã thêm Python vào `PATH`, sau đó mở lại terminal.
+Đảm bảo phiên bản đáp ứng yêu cầu. Nếu không nhận diện được lệnh `python`, cài Python và kiểm tra biến môi trường `PATH`.
 
-Ứng dụng hiện dùng thư viện chuẩn của Python; không có tệp `requirements.txt` trong cấu trúc đang được tài liệu hóa, vì vậy **không cần chạy `pip install -r requirements.txt` cho bản hiện tại**.
+### 3. Cài Ollama và tải model
 
-### Bước 3 — Cài Ollama và tải mô hình
-
-Cài Ollama theo hướng dẫn chính thức của dự án Ollama. Sau khi cài đặt, mở PowerShell và tải mô hình mặc định:
+Cài Ollama theo hướng dẫn chính thức, sau đó chạy:
 
 ```powershell
 ollama pull qwen2.5:7b-instruct-q4_K_M
-```
-
-Kiểm tra mô hình đã có trên máy:
-
-```powershell
 ollama list
 ```
 
-Trong danh sách cần thấy đúng tên:
-
-```text
-qwen2.5:7b-instruct-q4_K_M
-```
-
-Nếu Ollama chưa chạy, mở ứng dụng Ollama trước. Có thể kiểm tra API cục bộ bằng:
+Kiểm tra API Ollama cục bộ:
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:11434/api/tags
 ```
 
-Nếu mô hình đã có, không cần tải lại. Việc tải mô hình lần đầu cần Internet; khi đã được lưu đầy đủ trên máy, bản thử nghiệm có thể gửi yêu cầu đến Ollama cục bộ.
+Lần tải model đầu tiên cần Internet. Sau khi model và dữ liệu đã có trên máy, luồng xử lý có thể chạy cục bộ; không tải model mới trong lúc sử dụng thông thường.
 
-### Bước 4 — Kiểm tra tệp dữ liệu bắt buộc
+### 4. Kiểm tra dữ liệu nguồn
 
-Tại thư mục gốc dự án, chạy:
+Tại thư mục gốc:
 
 ```powershell
 Test-Path .\knowledge_base\03_cleaned\WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt
 ```
 
-Kết quả cần là:
+Kết quả mong đợi là `True`. Nếu là `False`, kiểm tra thư mục hiện hành, tệp dữ liệu và đường dẫn mà mã nguồn sử dụng.
 
-```text
-True
-```
-
-Nếu kết quả là `False`, ứng dụng sẽ không khởi động được vì không tìm thấy tệp nguồn mà mã nguồn đang tham chiếu. Kiểm tra bạn đang đứng ở đúng thư mục gốc và tệp dữ liệu đã được chuẩn bị đúng vị trí.
-
-### Bước 5 — Khởi chạy ứng dụng
-
-Ở thư mục gốc `offline-medical-ai`, chạy:
+### 5. Khởi chạy server
 
 ```powershell
 python .\app\internal_pilot.py
 ```
 
-Terminal sẽ hiển thị địa chỉ máy chủ, mô hình và số đoạn nguồn đã nạp. Khi máy chủ khởi động thành công, giữ cửa sổ terminal này mở.
-
-### Bước 6 — Mở giao diện
-
-Mở trình duyệt và truy cập:
+Giữ cửa sổ terminal mở sau khi server khởi động. Mở trình duyệt tại:
 
 **http://127.0.0.1:8765**
 
-Bạn sẽ thấy giao diện “WHO/ICRC — Cấp cứu cơ bản | Bản thử nghiệm nội bộ”. Nếu không vào được trang, hãy kiểm tra terminal còn chạy hay đã báo lỗi.
+Dừng ứng dụng bằng `Ctrl + C` trong cửa sổ đang chạy server.
 
-### Bước 7 — Dừng ứng dụng
+> Nếu ứng dụng báo thiếu tệp hoặc lỗi khởi động, hãy dùng thông báo thực tế từ terminal để chẩn đoán; không tự tạo tệp dữ liệu giả để vượt qua lỗi.
 
-Quay lại cửa sổ PowerShell đang chạy máy chủ và nhấn:
+## 💬 Sử dụng
 
-```text
-Ctrl + C
-```
+1. Mở giao diện tại `http://127.0.0.1:8765`.
+2. Nhập câu hỏi cụ thể về nội dung tài liệu.
+3. Gửi câu hỏi và chờ kết quả từ ứng dụng.
+4. Đọc các đoạn nguồn được truy xuất, đối chiếu nội dung trả lời với nguyên văn.
+5. Khi dùng chức năng dịch nguồn, xem bản dịch là hỗ trợ tham khảo và kiểm tra lại thuật ngữ.
 
-Máy chủ sẽ dừng.
+Ví dụ câu hỏi dùng để thử nghiệm tra cứu:
 
-## 💬 Cách sử dụng ứng dụng
+- “Tài liệu mô tả những dấu hiệu nào của sốc?”
+- “Tài liệu có đề cập những dấu hiệu nào của hạ đường huyết?”
+- “Theo tài liệu, nội dung về rắn cắn được trình bày ở đâu?”
 
-### 1. Đặt câu hỏi về tài liệu
+Đây là câu hỏi thử hệ thống, không phải hướng dẫn xử trí một trường hợp thực tế.
 
-Nhập câu hỏi cụ thể về nội dung tài liệu. Ví dụ:
+### API cục bộ
 
-- “Tài liệu liệt kê những dấu hiệu nào của sốc?”
-- “Tài liệu nêu các dấu hiệu nào của hạ đường huyết?”
-- “Theo tài liệu, tài liệu mô tả những bước nào về rắn cắn?”
+| Endpoint | Phương thức | Mục đích |
+|---|---|---|
+| `/` | `GET` | Giao diện web |
+| `/api/health` | `GET` | Trạng thái ứng dụng, model và chỉ mục |
+| `/api/ask` | `POST` | Truy xuất nguồn và xử lý câu hỏi |
+| `/api/translate` | `POST` | Dịch các đoạn nguồn theo chức năng hỗ trợ |
 
-Những câu hỏi này là ví dụ để kiểm tra khả năng tìm nội dung tài liệu, **không phải hướng dẫn xử trí một trường hợp thực tế**.
-
-### 2. Gửi câu hỏi
-
-Nhấn **Tìm trong tài liệu và hỏi mô hình**. Có thể nhấn `Ctrl + Enter` khi con trỏ đang ở vùng nhập câu hỏi.
-
-Ứng dụng tìm các đoạn phù hợp trong tài liệu trước. Nếu mức phù hợp không đạt ngưỡng được đặt trong mã nguồn, ứng dụng sẽ thông báo chưa tìm thấy nguồn đủ liên quan và không gọi mô hình để tạo câu trả lời.
-
-### 3. Đọc câu trả lời cùng cảnh báo
-
-Câu trả lời có thể kèm cảnh báo nếu ứng dụng phát hiện dấu hiệu đầu ra không đạt một số kiểm tra hình thức. Hãy xem câu trả lời như kết quả thử nghiệm, không phải kết luận y khoa.
-
-### 4. Mở đoạn nguồn để đối chiếu
-
-Trong phần **Các đoạn nguồn gốc (tiếng Anh)**, mở từng mục để xem nội dung đã truy xuất. Tham chiếu thể hiện trang PDF (nếu nhận diện được) và dòng trong tệp văn bản đã làm sạch.
-
-Hãy so sánh từng ý trong câu trả lời với đoạn nguồn. Việc có mã `[S1]`, `[S2]` không đảm bảo nguồn thực sự chứng minh toàn bộ ý được trình bày.
-
-### 5. Dịch đoạn nguồn khi cần
-
-Nhấn **Dịch các đoạn nguồn sang tiếng Việt** để yêu cầu mô hình dịch các đoạn đang hiển thị. Đây là bản dịch tự động của đoạn được truy xuất, không phải bản dịch toàn bộ tài liệu; có thể có lỗi thuật ngữ, thiếu ý hoặc sai điều kiện. Luôn đối chiếu nguyên văn tiếng Anh.
-
-## 🧪 Chạy bộ câu hỏi kiểm thử
-
-Dự án có một script phục vụ rà soát thủ công trên ứng dụng đang chạy.
-
-### Chạy toàn bộ bộ câu hỏi
-
-Mở **một cửa sổ PowerShell thứ hai** tại thư mục gốc, giữ cửa sổ đầu tiên chạy ứng dụng và thực hiện:
+Kiểm tra trạng thái:
 
 ```powershell
-python .\tests\run_broad_questions.py
+Invoke-RestMethod http://127.0.0.1:8765/api/health
 ```
 
-### Chạy nhanh 3 câu đầu tiên
+Gửi câu hỏi thử:
 
 ```powershell
-python .\tests\run_broad_questions.py --limit 3
+$body = @{ question = "Tài liệu mô tả những dấu hiệu nào của sốc?" } | ConvertTo-Json
+Invoke-RestMethod -Uri http://127.0.0.1:8765/api/ask -Method Post -ContentType "application/json; charset=utf-8" -Body $body
 ```
 
-### Chỉ định địa chỉ API
-
-```powershell
-python .\tests\run_broad_questions.py --url http://127.0.0.1:8765 --limit 3
-```
-
-Script sẽ:
-- Gọi endpoint kiểm tra trạng thái `/api/health`.
-- Gửi các câu hỏi từ `tests/broad_questions_vi.json` đến endpoint `/api/ask`.
-- In thời gian phản hồi, câu trả lời, nguồn được truy xuất và cảnh báo (nếu có).
-- So sánh trang nguồn mục tiêu trong bộ câu hỏi với các trang của nguồn truy xuất khi dữ liệu kiểm thử có chỉ định.
-
-**Cách đọc kết quả:** `PASS`/ `MISS` kiểm tra sự xuất hiện của trang mục tiêu trong nguồn truy xuất, không phải điểm chính xác y khoa. Chương trình chưa tự động chấm độ đúng, mức đầy đủ, độ an toàn hay mức phù hợp lâm sàng. Cần có người đánh giá đối chiếu từng trường hợp.
-
-Ngoài bộ câu hỏi rộng, `app/evaluation_questions.json` có một số tình huống dùng cho đánh giá nội dung mục tiêu và rà soát thủ công; đây không phải bài kiểm thử tự động hoàn chỉnh.
+Các endpoint và trường JSON có thể thay đổi giữa các phiên bản; kiểm tra `app/internal_pilot.py` nếu phản hồi khác ví dụ.
 
 ## ⚙️ Cấu hình
 
-Các biến môi trường được mã nguồn hiện tại hỗ trợ:
+Các biến môi trường được tài liệu hóa cho bản thử nghiệm:
 
-| Biến | Giá trị mặc định | Ý nghĩa |
+| Biến | Mặc định | Ý nghĩa |
 |---|---|---|
 | `BEC_PILOT_PORT` | `8765` | Cổng HTTP của ứng dụng |
-| `BEC_OLLAMA_MODEL` | `qwen2.5:7b-instruct-q4_K_M` | Tên mô hình đã tải trong Ollama |
-| `OLLAMA_URL` | `http://127.0.0.1:11434` | Địa chỉ API Ollama cục bộ |
+| `BEC_OLLAMA_MODEL` | `qwen2.5:7b-instruct-q4_K_M` | Tên model trong Ollama |
+| `OLLAMA_URL` | `http://127.0.0.1:11434` | API Ollama |
 
-Ví dụ PowerShell khi muốn dùng cổng khác:
+Ví dụ đổi cổng:
 
 ```powershell
 $env:BEC_PILOT_PORT = "8766"
 python .\app\internal_pilot.py
 ```
 
-Sau đó mở `http://127.0.0.1:8766`.
+Sau đó mở `http://127.0.0.1:8766`. Biến môi trường cần đặt trong cùng cửa sổ PowerShell trước khi khởi động.
 
-Ví dụ cấu hình rõ tên mô hình và địa chỉ Ollama:
+### Truy xuất ngữ nghĩa tùy chọn
 
-```powershell
-$env:BEC_PILOT_PORT = "8765"
-$env:BEC_OLLAMA_MODEL = "qwen2.5:7b-instruct-q4_K_M"
-$env:OLLAMA_URL = "http://127.0.0.1:11434"
-python .\app\internal_pilot.py
-```
+Phiên bản có hỗ trợ đường truy xuất embedding có thể kết hợp kết quả vector và từ khóa bằng RRF, nếu chỉ mục hợp lệ đã được tạo. Model embedding và model sinh câu trả lời là hai vai trò khác nhau.
 
-Các biến môi trường cần được đặt trong cùng cửa sổ PowerShell trước khi chạy chương trình. Mã nguồn hiện cấu hình máy chủ web chỉ lắng nghe tại `127.0.0.1`; không đổi cấu hình thành địa chỉ công khai để mở cho mạng khác.
-
-### Các endpoint cục bộ hiện có
-
-| Đường dẫn | Phương thức | Mục đích |
-|---|---|---|
-| `/` | `GET` | Hiển thị giao diện web |
-| `/api/health` | `GET` | Kiểm tra trạng thái demo, mô hình và dữ liệu |
-| `/api/ask` | `POST` | Truy xuất đoạn nguồn và tạo câu trả lời |
-| `/api/translate` | `POST` | Dịch tối đa các đoạn nguồn đang được hỗ trợ bởi mã nguồn |
-
-### Nền tảng phân loại yêu cầu (prototype)
-
-Mã nguồn hiện tại tích hợp `app/query_triage.py` trước bước truy xuất trong `/api/ask`. Thành phần này dùng quy tắc từ khóa có thể giải thích để chia yêu cầu thành sáu nhóm: lời chào, tra cứu tài liệu, câu hỏi ngoài phạm vi, câu hỏi cá nhân cần nhân viên y tế tư vấn, câu hỏi có thể mô tả tình huống nguy hiểm và câu hỏi mơ hồ.
-
-Các nhánh lời chào, câu hỏi cá nhân, tình huống có thể nguy hiểm và đầu vào mơ hồ được trả lời/chặn trước khi gọi retrieval hoặc LLM. Nếu không tìm được đoạn nguồn phù hợp, API trả về thông báo không có đủ bằng chứng và nhãn phân loại. Câu hỏi ngoài phạm vi nhưng có đoạn nguồn liên quan vẫn chỉ được trả lời dựa trên các đoạn truy xuất và có cảnh báo không suy rộng thành tư vấn y khoa tổng quát.
-
-**Giới hạn an toàn:** đây chỉ là bộ lọc từ khóa thử nghiệm, không phải hệ thống phân loại cấp cứu đã được kiểm định. Nó có thể báo động giả hoặc bỏ sót; việc không phát hiện từ khóa không có nghĩa là người dùng an toàn. Không dùng ứng dụng để chẩn đoán, kê đơn, phân loại cấp cứu hay quyết định xử trí người bệnh.
-
-### Truy xuất ngữ nghĩa tùy chọn (embedding + RRF)
-
-Bản phát triển có thêm một đường truy xuất ngữ nghĩa cục bộ qua Ollama. Khi chỉ mục vector tương thích đã tồn tại, ứng dụng hợp nhất kết quả từ khóa và kết quả vector bằng **Reciprocal Rank Fusion (RRF — hợp nhất thứ hạng)**. Khi chưa có chỉ mục, model embedding không khả dụng hoặc điểm tương đồng thấp hơn ngưỡng, ứng dụng quay về tìm kiếm từ khóa và đưa cảnh báo trong phản hồi API.
-
-Đây là cơ chế thử nghiệm, chưa có benchmark để khẳng định chính xác hơn cách truy xuất từ khóa. Ngưỡng mặc định `BEC_SEMANTIC_MIN_SCORE=0.35` mới là giá trị khởi đầu cần hiệu chỉnh bằng bộ câu hỏi tham chiếu. Không xem điểm tương đồng là xác suất đúng y khoa.
-
-**Thiết lập lần đầu** (cần Internet để tải model nếu máy chưa có):
+Thiết lập được mô tả trong mã nguồn hiện tại:
 
 ```powershell
 ollama pull bge-m3
 python -m app.build_vector_index --model bge-m3 --batch-size 16
 ```
 
-Lệnh tạo chỉ mục cho các đoạn trong tệp tri thức đã làm sạch, gọi API embedding cục bộ `/api/embed` theo lô, và lưu chỉ mục vào `vector_db/who_icrc_bec_bge_m3.json`. Thư mục `vector_db/` đã được Git bỏ qua; tệp chỉ mục không được commit lên repo. Thời gian tạo chỉ mục phụ thuộc cấu hình máy và tốc độ xử lý của Ollama.
-
-Sau đó chạy ứng dụng như thường lệ:
-
-```powershell
-python .\\app\\internal_pilot.py
-```
-
-Kiểm tra `http://127.0.0.1:8765/api/health`. Trường `semantic_index_loaded` cần là `true` và `retrieval_mode` là `hybrid_rrf` để xác nhận app đã nạp chỉ mục. Nếu là `false`, app đang chạy chế độ từ khóa. Chỉ mục tự bị từ chối nếu checksum của tài liệu nguồn hoặc tên model embedding không khớp; khi đó cần tạo lại bằng lệnh trên.
-
-Các tuỳ chọn liên quan:
-
-| Biến môi trường | Mặc định | Ý nghĩa |
-|---|---|---|
-| `BEC_EMBEDDING_MODEL` | `bge-m3` | Model Ollama dùng cho embedding, phải giống model đã tạo chỉ mục |
-| `BEC_VECTOR_INDEX_PATH` | `vector_db/who_icrc_bec_bge_m3.json` | Đường dẫn chỉ mục cục bộ |
-| `BEC_EMBED_BATCH_SIZE` | `16` | Số đoạn gửi trong mỗi batch khi tạo chỉ mục |
-| `BEC_EMBED_TIMEOUT` | `180` giây | Timeout từng yêu cầu embedding |
-| `BEC_SEMANTIC_MIN_SCORE` | `0.35` | Ngưỡng cosine similarity thử nghiệm trước khi dùng hợp nhất thứ hạng |
-
-Muốn chạy chỉ bằng từ khóa, trỏ `BEC_VECTOR_INDEX_PATH` đến đường dẫn chưa tồn tại trước khi khởi động app hoặc không tạo chỉ mục. Các embedding và truy vấn được gửi tới Ollama cục bộ, không phải dịch vụ embedding trên đám mây. Xem tài liệu [Ollama Embeddings](https://github.com/ollama/ollama/blob/main/docs/capabilities/embeddings.mdx) và model [BGE-M3 trên Ollama](https://ollama.com/library/bge-m3).
-
-### Đánh giá truy xuất bằng Recall@k và MRR
-
-Dự án có script benchmark chỉ đánh giá bước truy xuất, không gọi LLM để sinh câu trả lời. Bộ mặc định là `tests/broad_questions_vi.json`; nhãn hiện có là trang PDF mục tiêu, không phải nhãn đầy đủ cho từng đoạn văn.
-
-Chạy đối chứng từ khóa, không cần model embedding:
-
-```powershell
-python -m tests.evaluate_retrieval --method keyword --top-k 5
-```
-
-Sau khi đã tạo chỉ mục embedding và khởi động được Ollama, so sánh cả ba phương pháp trên cùng bộ câu hỏi:
-
-```powershell
-python -m tests.evaluate_retrieval --method all --require-semantic --top-k 5 --output reports/retrieval_metrics.json
-```
-
-Báo cáo gồm Recall@k theo trang, MRR (vị trí của kết quả liên quan đầu tiên), HitRate@k, độ trễ và chi tiết kết quả từng câu. Các câu không có trang đích được ghi nhận là chưa có nhãn và không được tính vào trung bình. Nên rà soát nhãn trang trước khi diễn giải kết quả; các chỉ số này không đo độ đúng của câu trả lời hay độ an toàn lâm sàng.
-
-### Kiểm thử tự động
-
-Chạy hai nhóm kiểm thử từ thư mục gốc:
-
-```powershell
-python -m unittest tests.test_query_triage -v
-python -m unittest tests.test_ask_endpoint_triage -v
-```
-
-Hoặc chạy toàn bộ kiểm thử:
-
-```powershell
-python -m unittest discover -s tests -p "test*.py" -v
-```
-
-GitHub Actions được cấu hình tại `.github/workflows/python-tests.yml` để chạy các bài kiểm thử khi có push hoặc pull request. Kết quả phải được xem trên tab **Actions**; chỉ việc thêm workflow không có nghĩa là CI đã chạy thành công.
-
-Ví dụ kiểm tra trạng thái:
+Sau khi build, kiểm tra:
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:8765/api/health
 ```
 
-Ví dụ gửi câu hỏi trực tiếp:
+Nếu trường `semantic_index_loaded` là `true` và `retrieval_mode` là `hybrid_rrf`, ứng dụng báo đã nạp chỉ mục kết hợp. Nếu không, cần xem phản hồi health và log để xác định nguyên nhân. Lệnh, tên trường và đường dẫn chỉ mục cần được đối chiếu với đúng phiên bản mã nguồn.
+
+Tài liệu tham khảo kỹ thuật:
+- [Ollama](https://ollama.com/)
+- [Ollama Embeddings](https://github.com/ollama/ollama/blob/main/docs/capabilities/embeddings.mdx)
+- [BGE-M3 trên Ollama](https://ollama.com/library/bge-m3)
+
+## 🧪 Đánh giá
+
+### Chạy bộ câu hỏi
+
+Giữ cửa sổ thứ nhất chạy ứng dụng; mở PowerShell thứ hai ở thư mục gốc:
 
 ```powershell
-$body = @{ question = "Tài liệu liệt kê những dấu hiệu nào của sốc?" } | ConvertTo-Json
-Invoke-RestMethod -Uri http://127.0.0.1:8765/api/ask -Method Post -ContentType "application/json; charset=utf-8" -Body $body
+python .\tests\run_broad_questions.py
 ```
+
+Chạy giới hạn ba câu:
+
+```powershell
+python .\tests\run_broad_questions.py --limit 3
+```
+
+Chỉ định URL:
+
+```powershell
+python .\tests\run_broad_questions.py --url http://127.0.0.1:8765 --limit 3
+```
+
+Script này phục vụ rà soát nguồn và thời gian phản hồi. Kết quả tìm thấy trang đích không đồng nghĩa với câu trả lời đúng, đầy đủ hoặc an toàn về y khoa.
+
+### Benchmark truy xuất
+
+Nếu các script tương ứng tồn tại trong phiên bản đang dùng, có thể chạy đối chứng từ khóa:
+
+```powershell
+python -m tests.evaluate_retrieval --method keyword --top-k 5
+```
+
+Với chỉ mục ngữ nghĩa đã sẵn sàng:
+
+```powershell
+python -m tests.evaluate_retrieval --method all --require-semantic --top-k 5 --output reports/retrieval_metrics.json
+```
+
+Các chỉ số thường được dùng:
+- **Recall@k:** tỷ lệ câu hỏi có ít nhất một kết quả liên quan trong top k.
+- **MRR (Mean Reciprocal Rank):** đánh giá vị trí của kết quả liên quan đầu tiên.
+- **HitRate@k:** tỷ lệ câu hỏi có kết quả mục tiêu xuất hiện trong top k.
+
+Kết quả chỉ có ý nghĩa khi nhãn tham chiếu đủ tốt. Các chỉ số truy xuất không đo trực tiếp độ chính xác của câu trả lời hoặc an toàn lâm sàng.
+
+### Kiểm thử tự động
+
+```powershell
+python -m unittest discover -s tests -p "test*.py" -v
+```
+
+Chỉ xem CI là đạt khi kiểm tra trạng thái thực tế trong tab **Actions** của GitHub; việc có workflow không đảm bảo mọi lần chạy đều thành công.
 
 ## 🩹 Xử lý lỗi thường gặp
 
-| Hiện tượng | Nguyên nhân thường gặp | Cách kiểm tra / xử lý |
-|---|---|---|
-| `python` không được nhận diện | Python chưa cài hoặc chưa có trong `PATH` | Chạy `python --version`, cài Python 3.12+ và mở terminal mới |
-| Không tìm thấy tệp văn bản nguồn | Đang chạy ngoài thư mục dự án hoặc thiếu tệp dữ liệu | Chạy `Test-Path .\knowledge_base\03_cleaned\WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt` ở thư mục gốc |
-| Không kết nối được Ollama | Ollama chưa chạy hoặc API không ở địa chỉ cấu hình | Kiểm tra `ollama list` và `Invoke-RestMethod http://127.0.0.1:11434/api/tags` |
-| Không tìm thấy mô hình | Tên mô hình trong cấu hình chưa được tải | Chạy `ollama pull qwen2.5:7b-instruct-q4_K_M` hoặc đặt `BEC_OLLAMA_MODEL` trùng một mô hình có trong `ollama list` |
-| Ollama báo không tìm thấy model | Tên trong `BEC_OLLAMA_MODEL` không khớp tên đã cài | So sánh chính xác tên mô hình trong `ollama list` |
-| Trang web không mở được | Máy chủ chưa khởi chạy, đã dừng hoặc cổng đang bị chiếm | Kiểm tra cửa sổ chạy Python và thông báo lỗi; thử `BEC_PILOT_PORT=8766` bằng cú pháp PowerShell ở trên |
-| Câu trả lời báo chưa tìm được nguồn | Bộ tìm từ khóa chưa tìm được đoạn đủ phù hợp | Thử diễn đạt lại bằng thuật ngữ xuất hiện trong tài liệu; không xem việc không tìm thấy là bằng chứng tài liệu không có thông tin |
-| Câu trả lời trống hoặc có cảnh báo | Mô hình có thể sinh nội dung không đạt kiểm tra hoặc yêu cầu hết thời gian | Đọc đoạn nguồn tiếng Anh; thử lại câu hỏi cụ thể hơn và rà soát model/service |
-| Bản dịch không xuất hiện | Dịch thất bại hoặc bộ kiểm tra chất lượng phát hiện dấu hiệu lỗi | Đọc nguồn tiếng Anh; không coi bộ lọc hình thức là xác nhận chất lượng bản dịch |
-| Cổng bị sử dụng | Có chương trình khác đang lắng nghe tại cổng 8765 | Đặt `$env:BEC_PILOT_PORT = "8766"` rồi chạy lại |
+| Vấn đề | Kiểm tra |
+|---|---|
+| `python` không được nhận diện | Kiểm tra cài đặt Python và `PATH` |
+| Thiếu tệp dữ liệu | Kiểm tra thư mục gốc và đường dẫn tệp đã làm sạch |
+| Không kết nối được Ollama | Mở Ollama, kiểm tra `ollama list` và API tags |
+| Không tìm thấy model | Đối chiếu tên `BEC_OLLAMA_MODEL` với `ollama list` |
+| Không mở được giao diện | Xem terminal, kiểm tra server còn chạy và cổng có bị chiếm |
+| Không có nguồn phù hợp | Diễn đạt câu hỏi bằng thuật ngữ trong tài liệu; đừng suy ra rằng tài liệu không có thông tin |
+| Bản dịch hoặc câu trả lời có cảnh báo | Đối chiếu nguồn gốc; bộ kiểm tra hình thức không bảo đảm nội dung chính xác |
+| Chế độ ngữ nghĩa không hoạt động | Kiểm tra chỉ mục, model embedding, đường dẫn và phản hồi `/api/health` |
 
-### Quy trình chẩn đoán nhanh
-
-Chạy theo đúng thứ tự sau để xác định lỗi nằm ở đâu:
+Chẩn đoán ban đầu:
 
 ```powershell
 python --version
 ollama list
 Invoke-RestMethod http://127.0.0.1:11434/api/tags
 Test-Path .\knowledge_base\03_cleaned\WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt
-python .\app\internal_pilot.py
 ```
 
-Nếu vẫn lỗi, ghi lại thông báo đầy đủ từ terminal và các lệnh vừa chạy. Không xóa môi trường, thư mục mô hình hoặc kho dữ liệu để thử sửa lỗi khi chưa xác định nguyên nhân.
+Nếu vẫn lỗi, giữ nguyên dữ liệu, ghi lại thông báo lỗi đầy đủ và xác định nguyên nhân trước khi thay đổi môi trường.
 
-## 🛡️ An toàn, quyền riêng tư và phạm vi sử dụng
+## 🛡️ An toàn và giới hạn
 
-### ⚠️ Chỉ dùng thử nghiệm nội bộ
+### Chỉ dùng cho nghiên cứu
 
-Ứng dụng đang ở **Mức 0 — tra cứu tài liệu** trong cách phân loại vận hành nội bộ của dự án. Đây không phải chứng nhận an toàn hoặc phân loại pháp lý.
+- Không dùng ứng dụng để chẩn đoán, phân loại cấp cứu, kê đơn hoặc quyết định điều trị.
+- Không dùng câu trả lời làm căn cứ duy nhất cho quyết định chăm sóc người bệnh.
+- Nội dung sinh tự động có thể sai hoặc thiếu, ngay cả khi có trích dẫn.
+- Bản dịch tự động có thể làm sai thuật ngữ, phủ định, liều lượng, đơn vị hoặc điều kiện.
+- Khi gặp tình huống thực tế, hãy liên hệ nhân viên y tế hoặc dịch vụ cấp cứu phù hợp và tuân thủ quy trình tại cơ sở.
+- Cần chuyên gia y tế đánh giá độc lập trước khi cân nhắc sử dụng trong môi trường lâm sàng.
 
-- Không dùng để chẩn đoán, phân loại cấp cứu, kê đơn, quyết định điều trị hoặc thay thế nhân viên y tế.
-- Không dùng câu trả lời tự động làm căn cứ duy nhất cho bất kỳ quyết định chăm sóc người bệnh nào.
-- Bản dịch và nội dung sinh tự động có thể bỏ sót phủ định, điều kiện, liều lượng, đơn vị hoặc ngoại lệ.
-- Khi gặp tình huống thực tế, làm theo quy trình tại cơ sở và liên hệ nhân viên y tế có chuyên môn.
-- Mọi nội dung có ý nghĩa chuyên môn phải được đối chiếu với nguyên văn và được người có chuyên môn đánh giá.
+### Quyền riêng tư
 
-### 🔐 Dữ liệu và quyền riêng tư
+Ứng dụng được thiết kế để giao tiếp với Ollama cục bộ và hướng tới sử dụng trên máy cá nhân. Tuy nhiên, điều này không thay thế việc rà soát toàn bộ hệ điều hành, phần mềm, cấu hình mạng và cơ chế ghi log.
 
-Theo mã nguồn hiện tại:
-- Máy chủ web chỉ lắng nghe trên địa chỉ loopback `127.0.0.1`.
-- Yêu cầu mô hình được gửi đến API Ollama cục bộ, không được thiết kế để gọi dịch vụ AI trên đám mây.
-- Ứng dụng không lưu lịch sử trò chuyện theo thiết kế hiện tại và đã tắt ghi log mặc định của máy chủ HTTP.
-
-Tuy vậy, điều này không phải cam kết bảo mật toàn diện: hệ điều hành, Ollama hoặc công cụ khác trên máy vẫn có thể có cơ chế ghi nhận riêng. **Không nhập tên, số hồ sơ, địa chỉ, ảnh, thông tin định danh hay dữ liệu nhạy cảm của người bệnh.** Chỉ chạy trên máy tin cậy.
+**Không nhập thông tin định danh hoặc dữ liệu nhạy cảm của người bệnh.** Chỉ chạy trên máy tin cậy; không mở server ra mạng công cộng.
 
 ## 🧱 Hạn chế hiện tại
 
-1. **Truy xuất theo từ khóa:** có thể bỏ lỡ cách diễn đạt tương đương, câu hỏi nhiều ý, nội dung bảng hoặc đoạn nằm ngoài hai kết quả được chọn.
-2. **Nguồn còn hẹp:** bản demo tập trung vào một tài liệu WHO/ICRC BEC 2018 đã làm sạch; chưa có quy trình quản trị nhiều nguồn có phiên bản, mức ưu tiên và ngày rà soát.
-3. **Câu trả lời phụ thuộc LLM:** mô hình có thể bỏ sót hoặc diễn đạt sai dù đã nhận đoạn nguồn. Mã trích dẫn không tự chứng minh câu trả lời đúng.
-4. **Bản dịch chưa được thẩm định:** bộ lọc chỉ phát hiện một số dấu hiệu hình thức, không thay thế thẩm định thuật ngữ y khoa.
-5. **Chưa có bộ phân loại ý định và an toàn độc lập:** chưa có lớp riêng để phân biệt câu hỏi thông thường, câu hỏi y tế, tình huống nguy cấp, câu hỏi ngoài phạm vi và câu hỏi mơ hồ.
-6. **Đánh giá còn thủ công:** script đo thời gian và hiển thị nguồn, nhưng không cung cấp điểm độ chính xác, độ bao phủ, độ an toàn hay kết quả đánh giá lâm sàng tự động.
-7. **Chưa có triển khai thực tế:** không có tài khoản, phân quyền, giám sát vận hành, quản trị tài liệu hoàn chỉnh hoặc xác nhận độc lập để sử dụng lâm sàng.
+1. Truy xuất có thể bỏ lỡ cách diễn đạt khác, nội dung bảng hoặc thông tin không nằm trong các đoạn được chọn.
+2. Kho tri thức hiện tập trung vào một tài liệu chính; chưa phải một cơ sở tri thức y tế toàn diện.
+3. LLM có thể suy diễn vượt nguồn hoặc diễn đạt sai.
+4. Kiểm tra mã trích dẫn và các quy tắc đầu ra chỉ phát hiện một số lỗi hình thức, không chứng minh quan hệ giữa từng khẳng định và bằng chứng.
+5. Bộ phân loại theo từ khóa có thể báo động giả hoặc bỏ sót.
+6. Đánh giá cần nhãn tham chiếu được rà soát; benchmark truy xuất không phải đánh giá lâm sàng.
+7. Chưa có cơ sở để tuyên bố hệ thống đã được xác nhận an toàn cho bệnh nhân hoặc sẵn sàng triển khai thực tế.
 
 ## 🛣️ Hướng phát triển
 
-Các mục dưới đây là **đề xuất nghiên cứu**, không phải chức năng đã hoàn thành:
+Các mục dưới đây là định hướng nghiên cứu, không phải cam kết về tính năng đã hoàn thành:
 
-- [ ] Chuẩn hóa cấu trúc kho dữ liệu, loại bỏ bản trung gian trùng lặp khỏi luồng sử dụng chính và lập danh mục nguồn.
-- [x] Có prototype truy xuất kết hợp từ khóa + embedding/RRF và cơ chế rơi về từ khóa; [ ] benchmark Recall@k/MRR và hiệu chỉnh ngưỡng trên bộ câu hỏi tham chiếu.
-- [x] Có bộ phân loại yêu cầu theo quy tắc từ khóa và tích hợp vào `/api/ask`; [ ] đánh giá độ bao phủ/false positive/false negative trên bộ kiểm thử mở rộng do chuyên môn rà soát.
-- [ ] Xây dựng lớp an toàn dựa trên quy tắc kiểm tra được, ưu tiên nhận diện dấu hiệu cảnh báo và khuyến nghị liên hệ trợ giúp phù hợp; không giao toàn bộ quyết định an toàn cho LLM.
-- [ ] Tăng khả năng truy nguyên: lưu phiên bản nguồn, trang, vị trí đoạn, thời điểm rà soát và liên kết giữa từng ý trả lời với bằng chứng.
-- [ ] Xây dựng bộ đánh giá có đáp án tham chiếu, chấm độ đúng nguồn, độ đầy đủ, mức bịa thông tin, độ an toàn, độ trễ và nhu cầu tài nguyên.
-- [ ] Nhờ người có chuyên môn y tế rà soát độc lập bộ câu hỏi và đầu ra trước khi mở rộng phạm vi.
-- [ ] Đo kiểm nhiều mô hình và các phương án lượng tử hóa trên thiết bị mục tiêu trước khi đề xuất cấu hình triển khai.
+- [ ] Chuẩn hóa kho dữ liệu, nguồn, phiên bản và quy trình cập nhật.
+- [ ] Mở rộng bộ câu hỏi tham chiếu và rà soát nhãn trang/đoạn.
+- [ ] So sánh truy xuất từ khóa và hybrid bằng Recall@k, MRR, độ trễ và tài nguyên.
+- [ ] Đánh giá mức bám sát nguồn, nội dung không có bằng chứng, độ đầy đủ và chất lượng bản dịch.
+- [ ] Kiểm tra false positive/false negative của quy tắc phân loại yêu cầu.
+- [ ] Xây dựng quy trình rà soát độc lập với người có chuyên môn y tế.
+- [ ] Đo kiểm nhiều model và cấu hình trên phần cứng mục tiêu.
+- [ ] Chỉ xem xét mở rộng phạm vi sau khi có kết quả đánh giá đáng tin cậy.
 
-Nên triển khai theo từng giai đoạn: **độ tin cậy của dữ liệu → chất lượng truy xuất → an toàn đầu ra → đánh giá độc lập → mới cân nhắc mở rộng chức năng**.
+Thứ tự ưu tiên: **chất lượng dữ liệu → chất lượng truy xuất → độ tin cậy của câu trả lời → đánh giá an toàn độc lập → cân nhắc mở rộng**.
 
 ## 📚 Nguồn tài liệu
 
-Tài liệu được dùng trong bản thử nghiệm hiện tại:
+- WHO/ICRC, *Basic Emergency Care: Approach to the Acutely Ill and Injured* (2018), được dùng làm nguồn chính cho bản thử nghiệm.
+- [Ollama](https://ollama.com/)
+- [Ollama Embeddings](https://github.com/ollama/ollama/blob/main/docs/capabilities/embeddings.mdx)
+- [BGE-M3 trên Ollama](https://ollama.com/library/bge-m3)
 
-- **WHO/ICRC Basic Emergency Care: Approach to the Acutely Ill and Injured (2018)** — tài liệu huấn luyện cấp cứu cơ bản được lưu trong cây dữ liệu của dự án tại `knowledge_base/01_raw/WHO/WHO_ICRC_Basic_Emergency_Care_2018.pdf`.
-- Tệp văn bản trích xuất và làm sạch dùng khi khởi chạy nằm ở `knowledge_base/03_cleaned/WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt`.
+Trước khi phân phối PDF hoặc văn bản trích xuất, hãy xác minh giấy phép và điều kiện tái phân phối của tài liệu nguồn.
 
-Tài liệu gốc được tạo bởi bên thứ ba. Trước khi công khai repository hoặc phân phối bản PDF/văn bản trích xuất, cần kiểm tra giấy phép và điều kiện tái phân phối áp dụng cho các tệp đó. Việc đặt một tệp trong repository không tự tạo ra quyền phân phối tệp ấy.
+## 🤝 Báo lỗi và phản hồi
 
-## 🤝 Đóng góp và phản hồi
+Khi báo lỗi, hãy cung cấp thông tin không nhạy cảm:
 
-Đối với báo lỗi hoặc đề xuất cải tiến, hãy cung cấp:
+1. Hệ điều hành, phiên bản Python, Ollama và model.
+2. Lệnh đã chạy cùng thông báo lỗi.
+3. Câu hỏi thử nghiệm và mã nguồn được truy xuất (đã loại bỏ dữ liệu nhạy cảm).
+4. Kết quả mong đợi so với thực tế.
 
-1. Hệ điều hành, phiên bản Python, phiên bản Ollama và tên mô hình.
-2. Các lệnh đã chạy và thông báo lỗi đầy đủ.
-3. Câu hỏi thử nghiệm, mã nguồn được truy xuất và cảnh báo tương ứng — chỉ sử dụng nội dung mẫu, không gửi dữ liệu người bệnh.
-4. Hành vi mong đợi so với kết quả thực tế.
-
-Mọi thay đổi liên quan đến hướng dẫn y tế, quy tắc an toàn hoặc nội dung nguồn phải được ghi rõ lý do, nguồn đối chiếu và người rà soát. Không xem việc một thay đổi chạy được về mặt kỹ thuật là bằng chứng rằng nó an toàn về mặt chuyên môn.
+Với thay đổi liên quan đến tri thức y tế hoặc an toàn, cần nêu nguồn đối chiếu và quy trình rà soát. Chạy được về mặt kỹ thuật không đồng nghĩa với an toàn về mặt chuyên môn.
 
 ---
 
 <p align="center">
-  <b>🧪 Dự án nghiên cứu đang phát triển — ưu tiên khả năng truy nguyên, kiểm chứng và an toàn.</b>
+  <b>🧪 Dự án nghiên cứu đang phát triển — ưu tiên khả năng kiểm chứng, truy nguyên và an toàn.</b>
 </p>
