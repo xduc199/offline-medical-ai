@@ -20,7 +20,15 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Iterable
 
-from app.query_triage import QueryClass, classify_query
+# Support both documented launch styles:
+#   python app/internal_pilot.py
+#   python -m app.internal_pilot
+try:
+    from app.query_triage import QueryClass, classify_query
+except ModuleNotFoundError as exc:
+    if exc.name != "app":
+        raise
+    from query_triage import QueryClass, classify_query
 
 
 ROOT = Path(__file__).resolve().parents[1]
