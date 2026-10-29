@@ -354,6 +354,18 @@ Các biến môi trường cần được đặt trong cùng cửa sổ PowerShe
 | `/api/ask` | `POST` | Truy xuất đoạn nguồn và tạo câu trả lời |
 | `/api/translate` | `POST` | Dịch tối đa các đoạn nguồn đang được hỗ trợ bởi mã nguồn |
 
+### Nền tảng phân loại yêu cầu (đang phát triển)
+
+Nhánh `feat/hybrid-retrieval-safety-foundation` bổ sung `app/query_triage.py`, một bộ phân loại yêu cầu theo quy tắc từ khóa có thể giải thích. Thành phần này phân biệt lời chào, câu hỏi tra cứu tài liệu, câu hỏi cá nhân cần nhân viên y tế tư vấn, câu hỏi ngoài phạm vi, câu hỏi mơ hồ và các cụm từ *có thể* biểu thị tình huống nguy hiểm.
+
+Đây **không phải** mô hình phân loại cấp cứu đã được kiểm định. Từ khóa có thể gây báo động giả hoặc bỏ sót; không phát hiện được từ khóa không có nghĩa là người dùng an toàn. Ở bước tích hợp tiếp theo, thành phần này phải được gọi trước truy xuất trong `/api/ask`, kèm kiểm thử tích hợp. Cho đến khi bước đó hoàn tất, luồng API hiện tại vẫn vận hành theo logic cũ.
+
+Chạy kiểm thử quy tắc:
+
+```powershell
+python -m unittest tests.test_query_triage -v
+```
+
 Ví dụ kiểm tra trạng thái:
 
 ```powershell
