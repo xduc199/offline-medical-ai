@@ -72,6 +72,30 @@ class HybridRetrievalWrapperTests(unittest.TestCase):
         self.assertEqual([item[0].index for item in result], [chunk_a.index, chunk_b.index])
         self.assertEqual(pilot.get_retrieval_diagnostics()["mode"], "keyword_fallback")
 
+    def test_hybrid_empty_topic_filter_uses_only_topic_filtered_keyword_fallback(self):
+        mixed_burn_shock_chunk = next(
+            chunk for chunk in pilot.CHUNKS
+            if chunk.page == "227" and "splint femur/pelvis as indicated" in chunk.text
+        )
+        keyword_results = [(mixed_burn_shock_chunk, 0.8)]
+        semantic_results = [({"index": mixed_burn_shock_chunk.index, "vector": [1.0]}, 0.9)]
+        with patch.object(
+            pilot, "SEMANTIC_INDEX", {"embedding_model": "fake", "entries": []}
+        ), patch.object(pilot, "keyword_retrieve", return_value=keyword_results), patch.object(
+            pilot, "semantic_search", return_value=semantic_results
+        ), patch.object(
+            pilot, "fuse_with_chunks", return_value=[(mixed_burn_shock_chunk, 0.9)]
+        ), patch.object(
+            pilot, "filter_topic_candidates", wraps=pilot.filter_topic_candidates
+        ) as topic_filter:
+            result = pilot.retrieve("Tóm tắt các nội dung chính về bỏng trong tài liệu.", limit=2)
+
+        self.assertEqual(result, [])
+        self.assertEqual(topic_filter.call_count, 2)
+        diagnostics = pilot.get_retrieval_diagnostics()
+        self.assertEqual(diagnostics["mode"], "keyword_fallback")
+        self.assertIn("Không có đoạn nguồn phù hợp", diagnostics["warning"])
+
 
 if __name__ == "__main__":
     unittest.main()

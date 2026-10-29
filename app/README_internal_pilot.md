@@ -29,6 +29,17 @@ python .\app\internal_pilot.py
 
 Mở <http://127.0.0.1:8765>. Dừng máy chủ bằng `Ctrl+C`.
 
+## Bật log chẩn đoán khi debug
+
+Mặc định ứng dụng không ghi prompt, câu hỏi hoặc bản nháp của mô hình. Để bật log cho một phiên debug có kiểm soát, đặt `BEC_PILOT_DIAGNOSTICS_PATH` trước khi khởi chạy:
+
+```powershell
+$env:BEC_PILOT_DIAGNOSTICS_PATH = Join-Path $env:TEMP "bec-generation-debug.jsonl"
+python .\app\internal_pilot.py
+```
+
+Tệp được ghi theo chế độ nối thêm. Mỗi bản ghi chứa prompt hệ thống, prompt người dùng (gồm câu hỏi, ngữ cảnh nguồn và khi retry có bản nháp bị từ chối), đoạn nguồn, đầu ra thô, kết quả kiểm tra và ID/trang nguồn. Nếu Ollama lỗi trước khi trả đầu ra, bản ghi có stage, loại lỗi và nhóm lỗi an toàn nhưng không chứa nội dung exception thô. Chỉ dùng đường dẫn cục bộ được bảo vệ, không dùng dữ liệu nhận dạng hoặc thông tin nhạy cảm của người bệnh, và không đặt log trong thư mục được phát hành công khai. Chọn tên tệp riêng nếu cần giữ log cũ. Sau phiên debug, dừng máy chủ rồi tắt biến môi trường bằng `Remove-Item Env:BEC_PILOT_DIAGNOSTICS_PATH`. Nếu không ghi được log, ứng dụng phát cảnh báo cho người phát triển nhưng vẫn tiếp tục xử lý request.
+
 ## Thử bộ câu hỏi rộng
 
 Khi máy chủ đang chạy, mở PowerShell ở thư mục gốc dự án và chạy:
