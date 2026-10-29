@@ -11,7 +11,7 @@ from typing import Sequence
 
 
 _CITATION_RE = re.compile(r"\[(S\d+(?:\s*,\s*S\d+)*)\]")
-_CITATION_TOKEN_RE = re.compile(r"\[(S\d+)\]")
+_CITATION_TOKEN_RE = re.compile(r"\[(S\d+(?:\s*,\s*S\d+)*)\]")
 
 
 @dataclass(frozen=True)
@@ -66,7 +66,7 @@ def validate_grounded_answer(
             ("missing_citation",),
         )
 
-    invalid = sorted({int(number) for number in re.findall(r"\[S(\d+)\]", text) if int(number) < 1 or int(number) > source_count})
+    invalid = sorted({\n        int(number)\n        for match in _CITATION_RE.findall(text)\n        for number in re.findall(r"S(\d+)", match)\n        if int(number) < 1 or int(number) > source_count\n    })
     if invalid:
         return AnswerCheck(
             False,
