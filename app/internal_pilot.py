@@ -18,7 +18,7 @@ import urllib.request
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
-from typing import Iterable
+from typing import Any, Iterable
 
 # Support both documented launch styles:
 #   python app/internal_pilot.py
@@ -54,6 +54,7 @@ except ModuleNotFoundError as exc:
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_PATH = ROOT / "knowledge_base" / "03_cleaned" / "WHO_ICRC_Basic_Emergency_Care_2018_cleaned_v1.txt"
+SOURCE_REGISTRY_PATH = ROOT / "knowledge_base" / "source_registry.json"
 MODEL = os.environ.get("BEC_OLLAMA_MODEL", "qwen2.5:7b-instruct-q4_K_M")
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://127.0.0.1:11434")
 HOST = "127.0.0.1"
@@ -113,17 +114,45 @@ class Chunk:
     start_line: int
     end_line: int
     text: str
+    source_id: str = ""
+    source_title: str = ""
+    publishers: tuple[str, ...] = ()
+    publication_year: int | None = None
+    language: str = "und"
+    topics: tuple[str, ...] = ()
+    source_path: str = ""
 
     @property
     def citation(self) -> str:
+        publisher_text = ", ".join(self.publishers)
+        source_label = self.source_title or self.source_id
+        if publisher_text and self.publication_year:
+            source_label = f"{source_label} — {publisher_text} ({self.publication_year})"
+        elif publisher_text:
+            source_label = f"{source_label} — {publisher_text}"
+        source = f"{source_label}; " if source_label else ""
         page = f"PDF p. {self.page}; " if self.page else ""
-        return f"{page}cleaned lines {self.start_line}-{self.end_line}"
+        return f"{source}{page}cleaned lines {self.start_line}-{self.end_line}"
 
 
-def load_chunks() -> tuple[str, list[Chunk]]:
-    if not SOURCE_PATH.is_file():
-        raise FileNotFoundError(f"Cleaned source not found: {SOURCE_PATH}")
-    lines = SOURCE_PATH.read_text(encoding="utf-8").splitlines()
+def load_chunks(
+    source_path: Path | None = None,
+    *,
+    start_index: int = 1,
+    source_metadata: dict[str, Any] | None = None,
+) -> tuple[str, list[Chunk]]:
+    """Extract page-aware chunks from one already-cleaned text document."""
+    path = source_path or SOURCE_PATH
+    if not path.is_file():
+        raise FileNotFoundError(f"Cleaned source not found: {path}")
+    source_text = path.read_text(encoding="utf-8")
+    metadata = source_metadata or {}
+    try:
+        relative_path = path.resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError:
+        relative_path = path.name
+
+    lines = source_text.splitlines()
     page = ""
     paragraphs: list[tuple[str, int, int, str]] = []
     buf: list[str] = []
@@ -156,7 +185,6 @@ def load_chunks() -> tuple[str, list[Chunk]]:
             start = number + 1
     flush(len(lines))
 
-    chunks: list[Chunk] = []
     pending: list[tuple[str, int, int, str]] = []
     for record in paragraphs:
         p, first, last, text = record
@@ -165,12 +193,101 @@ def load_chunks() -> tuple[str, list[Chunk]]:
             pending.append((p, old[1], last, old[3] + "\n" + text))
         else:
             pending.append(record)
-    for idx, (p, first, last, text) in enumerate(pending, 1):
-        chunks.append(Chunk(idx, p, first, last, text))
-    return SOURCE_PATH.read_text(encoding="utf-8"), chunks
+
+    publishers = tuple(str(item) for item in metadata.get("publishers", []) if str(item).strip())
+    topics = tuple(str(item) for item in metadata.get("topics", []) if str(item).strip())
+    source_id = str(metadata.get("source_id") or path.stem)
+    source_title = str(metadata.get("title") or path.stem)
+    year_value = metadata.get("publication_year")
+    try:
+        publication_year = int(year_value) if year_value is not None else None
+    except (TypeError, ValueError) as exc:
+        raise ValueError(f"Invalid publication_year for source {source_id}") from exc
+    language = str(metadata.get("language") or "und")
+
+    chunks: list[Chunk] = []
+    for idx, (p, first, last, text) in enumerate(pending, start_index):
+        chunks.append(Chunk(
+            idx, p, first, last, text,
+            source_id=source_id,
+            source_title=source_title,
+            publishers=publishers,
+            publication_year=publication_year,
+            language=language,
+            topics=topics,
+            source_path=relative_path,
+        ))
+    return source_text, chunks
 
 
-SOURCE_TEXT, CHUNKS = load_chunks()
+def load_corpus(
+    registry_path: Path = SOURCE_REGISTRY_PATH,
+    root: Path = ROOT,
+) -> tuple[str, list[Chunk], list[Path]]:
+    """Load only active sources in the explicit registry; never glob old text snapshots."""
+    if not registry_path.is_file():
+        raise FileNotFoundError(f"Source registry not found: {registry_path}")
+    try:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid source registry JSON: {registry_path}") from exc
+    if not isinstance(registry, dict) or registry.get("schema_version") != 1:
+        raise ValueError("Unsupported source registry schema_version.")
+    entries = registry.get("sources")
+    if not isinstance(entries, list):
+        raise ValueError("Source registry must contain a sources list.")
+
+    active = [entry for entry in entries if isinstance(entry, dict) and entry.get("status") == "active"]
+    if not active:
+        raise ValueError("Source registry contains no active knowledge sources.")
+
+    root_resolved = root.resolve()
+    loaded_texts: list[str] = []
+    all_chunks: list[Chunk] = []
+    active_paths: list[Path] = []
+    seen_ids: set[str] = set()
+    seen_paths: set[Path] = set()
+    next_index = 1
+
+    for entry in active:
+        source_id = str(entry.get("source_id", "")).strip()
+        title = str(entry.get("title", "")).strip()
+        cleaned_path_text = str(entry.get("cleaned_path", "")).strip()
+        if not source_id or not title or not cleaned_path_text:
+            raise ValueError("Each active source needs source_id, title and cleaned_path.")
+        if source_id in seen_ids:
+            raise ValueError(f"Duplicate active source_id: {source_id}")
+        seen_ids.add(source_id)
+
+        candidate_path = (root_resolved / cleaned_path_text).resolve()
+        if candidate_path != root_resolved and root_resolved not in candidate_path.parents:
+            raise ValueError(f"Source path escapes project root: {cleaned_path_text}")
+        if candidate_path in seen_paths:
+            raise ValueError(f"One cleaned file is registered more than once: {cleaned_path_text}")
+        seen_paths.add(candidate_path)
+        if not candidate_path.is_file():
+            raise FileNotFoundError(f"Active cleaned source not found: {candidate_path}")
+
+        source_text, source_chunks = load_chunks(
+            candidate_path,
+            start_index=next_index,
+            source_metadata=entry,
+        )
+        loaded_texts.append(source_text)
+        all_chunks.extend(source_chunks)
+        active_paths.append(candidate_path)
+        next_index += len(source_chunks)
+
+    return "\n\n".join(loaded_texts), all_chunks, active_paths
+
+
+SOURCE_TEXT, CHUNKS, SOURCE_PATHS = load_corpus()
+# Retain SOURCE_PATH as the primary source for existing integrations; corpus-aware
+# operations must use SOURCE_PATHS so every active document is fingerprinted.
+SOURCE_PATH = SOURCE_PATHS[0]
+
+
+
 
 # Dense retrieval is optional. Without a valid generated index (default), the
 # application keeps the original keyword retrieval path and requires no embed model.
@@ -178,6 +295,7 @@ EMBEDDING_MODEL = os.environ.get("BEC_EMBEDDING_MODEL", DEFAULT_EMBEDDING_MODEL)
 SEMANTIC_MIN_SCORE = float(os.environ.get("BEC_SEMANTIC_MIN_SCORE", "0.35"))
 SEMANTIC_INDEX = load_index(
     source_path=SOURCE_PATH,
+    source_paths=SOURCE_PATHS,
     index_path=DEFAULT_INDEX_PATH,
     model=EMBEDDING_MODEL,
 )
@@ -736,7 +854,9 @@ class Handler(BaseHTTPRequestHandler):
                 "safety_tier": 0,
                 "mode": "document_lookup_with_conservative_triage",
                 "model": MODEL,
-                "source_exists": SOURCE_PATH.is_file(),
+                "source_exists": all(path.is_file() for path in SOURCE_PATHS),
+                "source_count": len(SOURCE_PATHS),
+                "source_ids": sorted({chunk.source_id for chunk in CHUNKS}),
                 "source_chunks": len(CHUNKS),
                 "triage_enabled": True,
                 "triage_type": "keyword_rules_unvalidated",
@@ -834,7 +954,17 @@ class Handler(BaseHTTPRequestHandler):
                 return
             answer_result = source_list_answer(question, found)
             answer, warning = answer_result if answer_result is not None else call_model(question, found)
-            sources = [{"id": f"S{i}", "citation": chunk.citation, "text": chunk.text, "score": score}
+            sources = [{
+                "id": f"S{i}",
+                "source_id": chunk.source_id,
+                "title": chunk.source_title,
+                "publishers": list(chunk.publishers),
+                "publication_year": chunk.publication_year,
+                "topics": list(chunk.topics),
+                "citation": chunk.citation,
+                "text": chunk.text,
+                "score": score,
+            }
                        for i, (chunk, score) in enumerate(found, 1)]
             if triage.classification == QueryClass.OUT_OF_SCOPE:
                 out_of_scope_warning = (
