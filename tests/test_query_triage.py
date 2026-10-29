@@ -29,6 +29,18 @@ class QueryTriageTests(unittest.TestCase):
         result = classify_query("Tài liệu nêu các bước sơ cứu rắn cắn nào?")
         self.assertEqual(result.classification, QueryClass.DOCUMENT_LOOKUP)
 
+    def test_document_question_about_difficulty_breathing_is_not_emergency_report(self):
+        result = classify_query("Theo tài liệu, tổng quan về xử trí khó thở là gì?")
+        self.assertEqual(result.classification, QueryClass.DOCUMENT_LOOKUP)
+
+    def test_document_question_about_seizures_is_not_emergency_report(self):
+        result = classify_query("Tổng hợp cách xử trí co giật ở người lớn và trẻ em theo tài liệu.")
+        self.assertEqual(result.classification, QueryClass.DOCUMENT_LOOKUP)
+
+    def test_document_wording_does_not_override_personal_emergency(self):
+        result = classify_query("Theo tài liệu, người nhà tôi đang khó thở")
+        self.assertEqual(result.classification, QueryClass.POSSIBLE_EMERGENCY)
+
     def test_general_health_topic_is_not_assumed_supported(self):
         result = classify_query("Giải thích bệnh tiểu đường")
         self.assertEqual(result.classification, QueryClass.OUT_OF_SCOPE)

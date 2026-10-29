@@ -12,6 +12,7 @@ import math
 import os
 import re
 import threading
+import time
 import unicodedata
 import urllib.error
 import urllib.request
@@ -448,6 +449,7 @@ def retrieve(query: str, limit: int = 2) -> list[tuple[Chunk, float]]:
 
 
 def ollama_chat(system: str, user: str, num_predict: int = 650) -> str:
+    """Call local Ollama, retry transient server errors once, and preserve diagnostics."""
     body = json.dumps({
         "model": MODEL,
         "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
@@ -455,13 +457,35 @@ def ollama_chat(system: str, user: str, num_predict: int = 650) -> str:
         "stream": False,
         "options": {"temperature": 0, "seed": 42, "num_predict": num_predict},
     }).encode("utf-8")
+    endpoint = f"{OLLAMA_URL.rstrip('/')}/api/chat"
     req = urllib.request.Request(
-        f"{OLLAMA_URL.rstrip('/')}/api/chat", data=body,
+        endpoint, data=body,
         headers={"Content-Type": "application/json"}, method="POST",
     )
-    with urllib.request.urlopen(req, timeout=240) as response:
-        result = json.loads(response.read().decode("utf-8"))
-    return result.get("message", {}).get("content", "").strip()
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=240) as response:
+                result = json.loads(response.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            try:
+                detail = exc.read(1200).decode("utf-8", errors="replace").strip()
+            except Exception:
+                detail = ""
+            if attempt == 0 and exc.code in {500, 502, 503, 504}:
+                time.sleep(0.5)
+                continue
+            suffix = f": {detail[:800]}" if detail else f": {exc.reason}"
+            raise RuntimeError(f"Ollama /api/chat trả HTTP {exc.code}{suffix}") from exc
+        if not isinstance(result, dict):
+            raise RuntimeError("Ollama /api/chat trả về JSON không phải object.")
+        answer = result.get("message", {}).get("content", "")
+        if not isinstance(answer, str) or not answer.strip():
+            raise RuntimeError(
+                "Ollama /api/chat trả phản hồi nhưng message.content rỗng. "
+                "Kiểm tra model, log Ollama và tài nguyên máy."
+            )
+        return answer.strip()
+    raise RuntimeError("Ollama /api/chat vẫn lỗi sau lần thử lại.")
 
 
 def appears_english(text: str) -> bool:
@@ -743,6 +767,8 @@ def call_model_uncached(query: str, retrieved: list[tuple[Chunk, float]]) -> tup
         return answer, None
     except urllib.error.URLError as exc:
         return "", f"Không kết nối được Ollama cục bộ tại {OLLAMA_URL}: {exc}"
+    except RuntimeError as exc:
+        return "", f"Không tạo được câu trả lời từ Ollama cục bộ: {exc}"
     except TimeoutError:
         return "", "Mô hình cục bộ hết thời gian chờ. Hãy thử lại với câu hỏi ngắn hơn."
 
