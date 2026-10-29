@@ -66,7 +66,12 @@ def validate_grounded_answer(
             ("missing_citation",),
         )
 
-    invalid = sorted({\n        int(number)\n        for match in _CITATION_RE.findall(text)\n        for number in re.findall(r"S(\d+)", match)\n        if int(number) < 1 or int(number) > source_count\n    })
+    invalid = sorted({
+        int(number)
+        for match in _CITATION_RE.findall(text)
+        for number in re.findall(r"S(\d+)", match)
+        if int(number) < 1 or int(number) > source_count
+    })
     if invalid:
         return AnswerCheck(
             False,
