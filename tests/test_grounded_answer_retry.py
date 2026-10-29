@@ -3,7 +3,7 @@
 import unittest
 from unittest.mock import patch
 
-from app.internal_pilot import Chunk, _ollama_options, call_model_uncached
+from app.internal_pilot import Chunk, _ollama_options, call_model_uncached, translation_quality_warning
 
 
 class GroundedAnswerRetryTests(unittest.TestCase):
@@ -31,6 +31,15 @@ class GroundedAnswerRetryTests(unittest.TestCase):
         self.assertIsNone(warning)
         self.assertIn("[S1]", answer)
         self.assertEqual(chat.call_count, 2)
+
+
+    def test_translation_warning_catches_short_english_fragment(self):
+        warning = translation_quality_warning(
+            "Dấu hiệu gồm lú lẫn that gradually improves over minutes to hours. [S1]"
+        )
+
+        self.assertIsNotNone(warning)
+        self.assertIn("tiếng Anh", warning)
 
     def test_valid_citations_do_not_trigger_repair(self):
         chunk = Chunk(
