@@ -105,6 +105,26 @@ class SemanticRetrievalTests(unittest.TestCase):
                 sr.load_index(source_path=source, index_path=index_path, model="model-b")
             )
 
+    def test_load_index_rejects_malformed_entries(self):
+        import json
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            source = root / "source.txt"
+            source.write_text("source", encoding="utf-8")
+            index_path = root / "index.json"
+            invalid_index = {
+                "schema_version": 1,
+                "embedding_model": "unit-test-model",
+                "source_sha256": sr.sha256_file(source),
+                "dimensions": 2,
+                "entries": [None],
+            }
+            index_path.write_text(json.dumps(invalid_index), encoding="utf-8")
+            self.assertIsNone(
+                sr.load_index(source_path=source, index_path=index_path, model="unit-test-model")
+            )
+
     def test_reciprocal_rank_fusion_rewards_agreement(self):
         from types import SimpleNamespace
 
