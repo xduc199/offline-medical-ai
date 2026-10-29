@@ -354,18 +354,83 @@ Các biến môi trường cần được đặt trong cùng cửa sổ PowerShe
 | `/api/ask` | `POST` | Truy xuất đoạn nguồn và tạo câu trả lời |
 | `/api/translate` | `POST` | Dịch tối đa các đoạn nguồn đang được hỗ trợ bởi mã nguồn |
 
-### Nền tảng phân loại yêu cầu (đang phát triển)
+### Nền tảng phân loại yêu cầu (prototype)
 
-Nhánh `feat/hybrid-retrieval-safety-foundation` bổ sung `app/query_triage.py`, một bộ phân loại yêu cầu theo quy tắc từ khóa có thể giải thích. Thành phần này phân biệt lời chào, câu hỏi tra cứu tài liệu, câu hỏi cá nhân cần nhân viên y tế tư vấn, câu hỏi ngoài phạm vi, câu hỏi mơ hồ và các cụm từ *có thể* biểu thị tình huống nguy hiểm.
+Mã nguồn hiện tại tích hợp `app/query_triage.py` trước bước truy xuất trong `/api/ask`. Thành phần này dùng quy tắc từ khóa có thể giải thích để chia yêu cầu thành sáu nhóm: lời chào, tra cứu tài liệu, câu hỏi ngoài phạm vi, câu hỏi cá nhân cần nhân viên y tế tư vấn, câu hỏi có thể mô tả tình huống nguy hiểm và câu hỏi mơ hồ.
 
-Đây **không phải** mô hình phân loại cấp cứu đã được kiểm định. Từ khóa có thể gây báo động giả hoặc bỏ sót; không phát hiện được từ khóa không có nghĩa là người dùng an toàn. Thành phần đã được gọi trước truy xuất trong `/api/ask` trên nhánh phát triển. Các kiểm thử tích hợp API đã được bổ sung; cần chạy chúng trong môi trường Python của repository trước khi xem thay đổi là đã được kiểm chứng.
+Các nhánh lời chào, câu hỏi cá nhân, tình huống có thể nguy hiểm và đầu vào mơ hồ được trả lời/chặn trước khi gọi retrieval hoặc LLM. Nếu không tìm được đoạn nguồn phù hợp, API trả về thông báo không có đủ bằng chứng và nhãn phân loại. Câu hỏi ngoài phạm vi nhưng có đoạn nguồn liên quan vẫn chỉ được trả lời dựa trên các đoạn truy xuất và có cảnh báo không suy rộng thành tư vấn y khoa tổng quát.
 
-Chạy kiểm thử quy tắc:
+**Giới hạn an toàn:** đây chỉ là bộ lọc từ khóa thử nghiệm, không phải hệ thống phân loại cấp cứu đã được kiểm định. Nó có thể báo động giả hoặc bỏ sót; việc không phát hiện từ khóa không có nghĩa là người dùng an toàn. Không dùng ứng dụng để chẩn đoán, kê đơn, phân loại cấp cứu hay quyết định xử trí người bệnh.
+
+### Truy xuất ngữ nghĩa tùy chọn (embedding + RRF)
+
+Bản phát triển có thêm một đường truy xuất ngữ nghĩa cục bộ qua Ollama. Khi chỉ mục vector tương thích đã tồn tại, ứng dụng hợp nhất kết quả từ khóa và kết quả vector bằng **Reciprocal Rank Fusion (RRF — hợp nhất thứ hạng)**. Khi chưa có chỉ mục, model embedding không khả dụng hoặc điểm tương đồng thấp hơn ngưỡng, ứng dụng quay về tìm kiếm từ khóa và đưa cảnh báo trong phản hồi API.
+
+Đây là cơ chế thử nghiệm, chưa có benchmark để khẳng định chính xác hơn cách truy xuất từ khóa. Ngưỡng mặc định `BEC_SEMANTIC_MIN_SCORE=0.35` mới là giá trị khởi đầu cần hiệu chỉnh bằng bộ câu hỏi tham chiếu. Không xem điểm tương đồng là xác suất đúng y khoa.
+
+**Thiết lập lần đầu** (cần Internet để tải model nếu máy chưa có):
+
+```powershell
+ollama pull bge-m3
+python -m app.build_vector_index --model bge-m3 --batch-size 16
+```
+
+Lệnh tạo chỉ mục cho các đoạn trong tệp tri thức đã làm sạch, gọi API embedding cục bộ `/api/embed` theo lô, và lưu chỉ mục vào `vector_db/who_icrc_bec_bge_m3.json`. Thư mục `vector_db/` đã được Git bỏ qua; tệp chỉ mục không được commit lên repo. Thời gian tạo chỉ mục phụ thuộc cấu hình máy và tốc độ xử lý của Ollama.
+
+Sau đó chạy ứng dụng như thường lệ:
+
+```powershell
+python .\\app\\internal_pilot.py
+```
+
+Kiểm tra `http://127.0.0.1:8765/api/health`. Trường `semantic_index_loaded` cần là `true` và `retrieval_mode` là `hybrid_rrf` để xác nhận app đã nạp chỉ mục. Nếu là `false`, app đang chạy chế độ từ khóa. Chỉ mục tự bị từ chối nếu checksum của tài liệu nguồn hoặc tên model embedding không khớp; khi đó cần tạo lại bằng lệnh trên.
+
+Các tuỳ chọn liên quan:
+
+| Biến môi trường | Mặc định | Ý nghĩa |
+|---|---|---|
+| `BEC_EMBEDDING_MODEL` | `bge-m3` | Model Ollama dùng cho embedding, phải giống model đã tạo chỉ mục |
+| `BEC_VECTOR_INDEX_PATH` | `vector_db/who_icrc_bec_bge_m3.json` | Đường dẫn chỉ mục cục bộ |
+| `BEC_EMBED_BATCH_SIZE` | `16` | Số đoạn gửi trong mỗi batch khi tạo chỉ mục |
+| `BEC_EMBED_TIMEOUT` | `180` giây | Timeout từng yêu cầu embedding |
+| `BEC_SEMANTIC_MIN_SCORE` | `0.35` | Ngưỡng cosine similarity thử nghiệm trước khi dùng hợp nhất thứ hạng |
+
+Muốn chạy chỉ bằng từ khóa, trỏ `BEC_VECTOR_INDEX_PATH` đến đường dẫn chưa tồn tại trước khi khởi động app hoặc không tạo chỉ mục. Các embedding và truy vấn được gửi tới Ollama cục bộ, không phải dịch vụ embedding trên đám mây. Xem tài liệu [Ollama Embeddings](https://github.com/ollama/ollama/blob/main/docs/capabilities/embeddings.mdx) và model [BGE-M3 trên Ollama](https://ollama.com/library/bge-m3).
+
+### Đánh giá truy xuất bằng Recall@k và MRR
+
+Dự án có script benchmark chỉ đánh giá bước truy xuất, không gọi LLM để sinh câu trả lời. Bộ mặc định là `tests/broad_questions_vi.json`; nhãn hiện có là trang PDF mục tiêu, không phải nhãn đầy đủ cho từng đoạn văn.
+
+Chạy đối chứng từ khóa, không cần model embedding:
+
+```powershell
+python -m tests.evaluate_retrieval --method keyword --top-k 5
+```
+
+Sau khi đã tạo chỉ mục embedding và khởi động được Ollama, so sánh cả ba phương pháp trên cùng bộ câu hỏi:
+
+```powershell
+python -m tests.evaluate_retrieval --method all --require-semantic --top-k 5 --output reports/retrieval_metrics.json
+```
+
+Báo cáo gồm Recall@k theo trang, MRR (vị trí của kết quả liên quan đầu tiên), HitRate@k, độ trễ và chi tiết kết quả từng câu. Các câu không có trang đích được ghi nhận là chưa có nhãn và không được tính vào trung bình. Nên rà soát nhãn trang trước khi diễn giải kết quả; các chỉ số này không đo độ đúng của câu trả lời hay độ an toàn lâm sàng.
+
+### Kiểm thử tự động
+
+Chạy hai nhóm kiểm thử từ thư mục gốc:
 
 ```powershell
 python -m unittest tests.test_query_triage -v
 python -m unittest tests.test_ask_endpoint_triage -v
 ```
+
+Hoặc chạy toàn bộ kiểm thử:
+
+```powershell
+python -m unittest discover -s tests -p "test*.py" -v
+```
+
+GitHub Actions được cấu hình tại `.github/workflows/python-tests.yml` để chạy các bài kiểm thử khi có push hoặc pull request. Kết quả phải được xem trên tab **Actions**; chỉ việc thêm workflow không có nghĩa là CI đã chạy thành công.
 
 Ví dụ kiểm tra trạng thái:
 
@@ -445,8 +510,8 @@ Tuy vậy, điều này không phải cam kết bảo mật toàn diện: hệ �
 Các mục dưới đây là **đề xuất nghiên cứu**, không phải chức năng đã hoàn thành:
 
 - [ ] Chuẩn hóa cấu trúc kho dữ liệu, loại bỏ bản trung gian trùng lặp khỏi luồng sử dụng chính và lập danh mục nguồn.
-- [ ] Thiết kế truy xuất kết hợp từ khóa và ngữ nghĩa, đo lường chất lượng lấy đoạn trước khi chọn phương án.
-- [ ] Bổ sung phân loại câu hỏi: trong phạm vi / ngoài phạm vi / mơ hồ / tình huống có nguy cơ cao.
+- [x] Có prototype truy xuất kết hợp từ khóa + embedding/RRF và cơ chế rơi về từ khóa; [ ] benchmark Recall@k/MRR và hiệu chỉnh ngưỡng trên bộ câu hỏi tham chiếu.
+- [x] Có bộ phân loại yêu cầu theo quy tắc từ khóa và tích hợp vào `/api/ask`; [ ] đánh giá độ bao phủ/false positive/false negative trên bộ kiểm thử mở rộng do chuyên môn rà soát.
 - [ ] Xây dựng lớp an toàn dựa trên quy tắc kiểm tra được, ưu tiên nhận diện dấu hiệu cảnh báo và khuyến nghị liên hệ trợ giúp phù hợp; không giao toàn bộ quyết định an toàn cho LLM.
 - [ ] Tăng khả năng truy nguyên: lưu phiên bản nguồn, trang, vị trí đoạn, thời điểm rà soát và liên kết giữa từng ý trả lời với bằng chứng.
 - [ ] Xây dựng bộ đánh giá có đáp án tham chiếu, chấm độ đúng nguồn, độ đầy đủ, mức bịa thông tin, độ an toàn, độ trễ và nhu cầu tài nguyên.
@@ -480,3 +545,6 @@ Mọi thay đổi liên quan đến hướng dẫn y tế, quy tắc an toàn ho
 <p align="center">
   <b>🧪 Dự án nghiên cứu đang phát triển — ưu tiên khả năng truy nguyên, kiểm chứng và an toàn.</b>
 </p>
+
+
+<!-- Documentation note from PR #2: the request triage integration is described on that feature branch. -->
