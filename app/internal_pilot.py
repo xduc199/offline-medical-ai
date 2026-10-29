@@ -764,24 +764,24 @@ def call_model_uncached(query: str, retrieved: list[tuple[Chunk, float]]) -> tup
             current_user = user
             if attempt == 1:
                 current_user += (
-                    "\\n\\nYÊU CẦU SỬA ĐỊNH DẠNG: Câu trả lời trước không đáp ứng định dạng trích dẫn. "
+                    "\n\nYÊU CẦU SỬA ĐỊNH DẠNG: Câu trả lời trước không đáp ứng định dạng trích dẫn. "
                     "Hãy viết lại ngắn gọn bằng tiếng Việt, chỉ dùng các đoạn nguồn đã cho. "
                     "Mỗi gạch đầu dòng hoặc khẳng định thực tế phải kết thúc bằng mã nguồn hợp lệ "
                     "như [S1] hoặc [S2]. Chỉ dùng các mã nguồn thực sự có trong phần nguồn; "
                     "không tự tạo mã. Nếu nguồn không đủ, nói rõ phần nào chưa được tài liệu hỗ trợ."
                 )
             answer = ollama_chat(system, current_user, 450)
-            answer = localize_medical_terms(answer, "\\n".join(chunk.text for chunk, _ in answer_sources))
+            answer = localize_medical_terms(answer, "\n".join(chunk.text for chunk, _ in answer_sources))
             if asks_shock_signs:
-                answer = re.sub(r"(?m)^(-\\s+[^\\n]+?)(?<!\\[S1\\])$", r"\\1 [S1]", answer)
+                answer = re.sub(r"(?m)^(-\s+[^\n]+?)(?<!\[S1\])$", r"\1 [S1]", answer)
 
-            citation_groups = re.findall(r"\\[(S\\d+(?:\\s*,\\s*S\\d+)*)\\]", answer)
-            refs = [ref for group in citation_groups for ref in re.findall(r"S\\d+", group)]
+            citation_groups = re.findall(r"\[(S\d+(?:\s*,\s*S\d+)*)\]", answer)
+            refs = [ref for group in citation_groups for ref in re.findall(r"S\d+", group)]
             invalid_refs = [ref for ref in refs if ref not in valid]
             uncited_bullets = [
                 line for line in answer.splitlines()
-                if re.match(r"\\s*(?:[-*•]|\\d+[.)])\\s+", line)
-                and not re.search(r"\\[\\s*S\\d+(?:\\s*,\\s*S\\d+)*\\s*\\]", line)
+                if re.match(r"\s*(?:[-*•]|\d+[.)])\s+", line)
+                and not re.search(r"\[\s*S\d+(?:\s*,\s*S\d+)*\s*\]", line)
             ]
             if refs and not invalid_refs and not uncited_bullets:
                 validation_issue = None
