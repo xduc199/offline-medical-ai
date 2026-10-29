@@ -11,7 +11,7 @@ from typing import Sequence
 
 
 _CITATION_RE = re.compile(r"\[(S\d+(?:\s*,\s*S\d+)*)\]")
-_CITATION_TOKEN_RE = re.compile(r"\[(S\d+)\]")
+_CITATION_TOKEN_RE = re.compile(r"\[(S\d+(?:\s*,\s*S\d+)*)\]")
 
 
 @dataclass(frozen=True)
@@ -66,7 +66,12 @@ def validate_grounded_answer(
             ("missing_citation",),
         )
 
-    invalid = sorted({int(number) for number in re.findall(r"\[S(\d+)\]", text) if int(number) < 1 or int(number) > source_count})
+    invalid = sorted({
+        int(number)
+        for match in _CITATION_RE.findall(text)
+        for number in re.findall(r"S(\d+)", match)
+        if int(number) < 1 or int(number) > source_count
+    })
     if invalid:
         return AnswerCheck(
             False,
@@ -94,5 +99,9 @@ def validate_grounded_answer(
 def citations_are_in_range(answer: str, source_ids: Sequence[str]) -> bool:
     """Small helper for callers/tests that use explicit source labels."""
     allowed = set(source_ids)
-    seen = set(_CITATION_TOKEN_RE.findall(answer or ""))
+    seen = {
+        token
+        for match in _CITATION_RE.findall(answer or "")
+        for token in re.findall(r"S\d+", match)
+    }
     return bool(seen) and seen.issubset(allowed)
