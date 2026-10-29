@@ -87,6 +87,8 @@ class AskEndpointTriageTests(unittest.TestCase):
         self.assertEqual(payload["classification"], "document_lookup")
         self.assertEqual(len(payload["sources"]), 1)
         self.assertEqual(payload["sources"][0]["id"], "S1")
+        self.assertEqual(payload["answer"], "Nội dung tham chiếu [S1].")
+        self.assertIsNone(payload["warning"])
 
 
 if __name__ == "__main__":
