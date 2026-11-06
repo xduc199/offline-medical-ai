@@ -1,0 +1,429 @@
+{
+  "schema_version": 1,
+  "capture_type": "raw_local_pilot_outputs_for_human_review",
+  "captured_at_utc": "2026-10-29T07:48:07.380675+00:00",
+  "base_url": "http://127.0.0.1:8766",
+  "pilot_mode": "document_lookup_with_conservative_triage",
+  "model": "qwen2.5:7b-instruct-q4_K_M",
+  "records_captured": 8,
+  "failures": [],
+  "records": [
+    {
+      "id": "B01",
+      "question": "Theo tài liệu, tổng quan về xử trí khó thở là gì?",
+      "answer": "Các đoạn tìm được chưa đủ để chọn một hướng dẫn chung cho tình huống khó thở. Hãy xem các nguồn bên dưới hoặc nêu rõ bối cảnh cần tra. [S1] [S2]",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 85; cleaned lines 4556-4564",
+          "text": "or effusion);\n • blood clots in the vessels supplying the lungs;\n • any other cause of decreased oxygen carried in the blood (such as anaemia);\n • conditions that increase respiratory rate such as toxic ingestion, chemical imbalance (for \nexample in diabetic ketoacidosis) or anxiety.\nThe goal of INITIAL ASSESSMENT is to identify reversible causes of difficulty in breathing, \nand to recognize conditions that require urgent intervention or rapid transfer. \nThe goal of ACUTE MANAGEMENT is to ensure the airway stays open and breathing is \nadequate to deliver oxygen to the organs.",
+          "score": 1.0734270317835155
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 48; cleaned lines 2355-2375",
+          "text": "Module 2: Approach to trauma\n40 40 40\nOverview\nGENERAL PRINCIPLES OF TRAUMA CARE\nEarly priorities for an injured person include managing airway and breathing emergencies, \ncontrolling bleeding, treating shock and immobilizing the spine if needed.\nThe goal of INITIAL ASSESSMENT is to identify life-threatening injuries.\nThe goal of ACUTE MANAGEMENT is to ensure oxygenation and perfusion, to control \npain and to plan ongoing care.\nThis module will guide you through the: \n • Approach to trauma\n • ABCDE: Trauma primary survey\n • DO: Important conditions to recognize and manage in the primary survey (signs, symptoms \nand management)\n • ASK: Key history findings (SAMPLE history)\n • CHECK: \nTrauma secondary survey\n • DO: Important conditions to recognize and manage based on the history and secondary\nsurvey (Signs, symptoms and management)\n • Special populations\n – Trauma in pregnancy",
+          "score": 0.971786803615589
+        }
+      ],
+      "warning": "Câu trả lời được giới hạn vì câu hỏi chưa nêu tình huống cụ thể.",
+      "expected_pdf_pages": [
+        85
+      ],
+      "review_for": "Nêu rõ giới hạn nếu không đủ bối cảnh; nguồn có liên quan; không bịa hướng dẫn chung.",
+      "latency_seconds": 0.0192,
+      "capture_status": "success"
+    },
+    {
+      "id": "B02",
+      "question": "Tóm tắt các bước đánh giá người bệnh chấn thương.",
+      "answer": "Tài liệu nêu cách tiếp cận ABCDE để đánh giá ban đầu người bị chấn thương, với các nhãn gốc: A – Airway, B – Breathing, C – Circulation, D – Disability và E – Exposure. [S1]\nCác đoạn chi tiết được truy xuất chưa mô tả đủ thao tác cho các phần B, C, D, E; vì vậy câu trả lời chỉ nêu tên các phần, không suy diễn thêm. [S2]",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 221; cleaned lines 12646-12660",
+          "text": "SKILLS AMS SHOCK BREATHING TRAUMA INTROABCDEGLOSSARYREFS & QUICK CARDS\nPARTICIPANT WORKBOOK\n213 213\nTension pneumothorax\nOccurs when a pneumothorax causes sufficient pressure inside the chest cavity that blood \nvessels collapse (reducing the amount of blood that can return to the heart, and the heart \ncannot fill or pump enough blood to maintain perfusion of the organs).\nTracheal shift\nDescribes a change in the position of the trachea to either side of midline, a finding sometimes \nassociated with tension pneumothorax.\nTrauma primary survey \nThe trauma primary survey is another term for the ABCDE approach in injured patients. It \nincludes initial assessment of an injured person and management of all immediately life-\nthreatening injuries, in order of priority. The primary survey consists of the ABCDE: Airway, \nBreathing, Circulation, Disability and Exposure.",
+          "score": 1.0193691923434915
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 49; cleaned lines 2392-2421",
+          "text": "INTROABCDETRAUMABREATHINGSHOCKAMSSKILLSGLOSSARYREFS & QUICK CARDS\nPARTICIPANT WORKBOOK\n41 41\nABCDE: TRAUMA PRIMARY SURVEY\nThe ABCDE approach in injured patients is often also called the trauma primary survey. As \nfor all patients this should be conducted within the first 5 minutes and repeated whenever \nthe patient’s condition worsens. This trauma-specific ABCDE approach includes the initial \nassessment and management for all immediately life-threatening injuries. Always suspect \nhead and spine injury in a trauma patient with altered mental status. \nASSESSMENT IMMEDIATE MANAGEMENT\nAirway with \ncervical spine \nimmobilization\nA\nLook for:\n•\n blood\n, vomit, tongue or \nobjects obstructing the airway\n•\n burned nasal hairs or soot \naround the nose or mouth\n•\n head or neck trauma\n•\n neck haematoma (bleeding \nunder the skin)\n•\n altered mental status, as \nthis can affect the ability to",
+          "score": 1.0021312125447854
+        }
+      ],
+      "warning": "Nguồn truy xuất chỉ hỗ trợ danh sách ABCDE ở mức tên các phần; chưa đủ để tóm tắt từng thao tác.",
+      "expected_pdf_pages": [
+        49
+      ],
+      "review_for": "Tìm đúng phần tiếp cận chấn thương; trình tự và mức đầy đủ; không nhầm đoạn không liên quan.",
+      "latency_seconds": 0.0132,
+      "capture_status": "success"
+    },
+    {
+      "id": "B03",
+      "question": "Theo tài liệu, những dấu hiệu và nguyên nhân nào liên quan đến sốc?",
+      "answer": "Trong phần về sốc giảm thể tích, tài liệu nêu:\n- Dấu hiệu gồm nhịp tim nhanh, thở nhanh, da tái, đầu chi lạnh, thời gian làm đầy mao mạch chậm; có thể chóng mặt, lú lẫn/thay đổi trạng thái tinh thần hoặc hạ huyết áp. [S2]\n- Nguyên nhân có thể là mất máu nhanh hoặc mất dịch liên quan đến bỏng. [S1]",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 54; cleaned lines 2868-2895",
+          "text": "Module 2: Approach to trauma\n46 46 46\nC Circulation conditions\nCONDITION SIGNS AND SYMPTOMS IN-DEPTH MANAGEMENT\nHypovolaemic \nshock\n• Tachycardia,\ntachypnoea, pale skin,\ncold extremities, slow\ncapillary refill\n• May have dizziness,\nconfusion or altered\nmental status\n• May have hypotension\n• External bleeding or\ninternal bleeding (chest,\nabdomen, pelvis, femur,\nblood vessels)\nHypovolaemic shock can result from rapid loss of \nblood (haemorrhagic shock) or from the fluid loss \nassociated with burns. An adult patient in shock \nmay have only tachycardia (elevated heart rate) \nand/or tachypnoea (high respiratory rate) and may \nnot have low blood pressure until the condition is \nimmediately life-threatening. Even with a systolic \nblood pressure greater than 90 mmHg, suspect \nhypovolaemic shock if there is severe bleeding or \nany sign of poor perfusion (such as cool, moist,",
+          "score": 2.1884129428328327
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 32; cleaned lines 1507-1552",
+          "text": "Module 1: The ABCDE and SAMPLE history approach\n24 24 24\nCIRCULATION conditions \nC\nCONDITION SIGNS AND SYMPTOMS IN-DEPTH DESCRIPTION AND MANAGEMENT\nPulselessness •\n No pulse\n•\n Unconscious\n•\n Not br\neathing\nFollow relevant cardiopulmonary resuscitation \n(CPR) protocols. \nShock •\n Rapid heart rate \n(tachycardia)\n•\n Rapid breathing \n(tachypnoea)\n•\n Pale and cool skin\n•\n Capillary refill>3 seconds\n•\n Sweating (diaphoresis)\n•\n May have dizziness, \nconfusion, altered mental \nstatus \n•\n May have hypotension \nPoor perfusion is the failure to deliver enough \noxygen-carrying blood to the vital organs. When \npoor perfusion continues until organ function is \naffected, this is called shock and can lead rapidly \nto death. \n•\n Initial treatment for shock includes laying the \npatient flat (if tolerated).\n•\n Give oxygen. [See SKILLS] \n•\n Control bleeding. [See SKILLS] \n•\n Start an IV and give IV fluids. [See SKILLS]",
+          "score": 1.8269149441481036
+        }
+      ],
+      "warning": null,
+      "expected_pdf_pages": [
+        54,
+        32
+      ],
+      "review_for": "Phân biệt phần tài liệu thực sự nêu về dấu hiệu với nguyên nhân; nói rõ nếu nguồn truy xuất không đủ.",
+      "latency_seconds": 0.0165,
+      "capture_status": "success"
+    },
+    {
+      "id": "B04",
+      "question": "Tài liệu hướng dẫn gì về rắn cắn, từ đánh giá đến xử trí?",
+      "answer": "Tài liệu nêu các bước xử trí rắn cắn sau:\n- Mục tiêu là hạn chế nọc độc lan rộng và tác động của nọc độc lên cơ thể. [S1]\n- Bất động chi bị cắn. [S1]\n- Nếu có thể, chụp ảnh con rắn và gửi ảnh cùng người bệnh. [S1]\n- Truyền dịch tĩnh mạch nếu có bằng chứng sốc. [S1]\n- Theo dõi sát vì có thể xuất hiện sốc muộn hoặc vấn đề đường thở; chuẩn bị chuyển giao hoặc chuyển viện sớm. [S1]",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 34; cleaned lines 1767-1811",
+          "text": "Module 1: The ABCDE and SAMPLE history approach\n26 26 26\nEXPOSURE conditions \nE\nCONDITION SIGNS AND SYMPTOMS IN-DEPTH DESCRIPTION AND MANAGEMENT\nSnake bite •\n History of snake bite\n•\n Bite marks may be seen\n•\n Oedema\n•\n Blistering of the skin\n•\n Bruising\n•\n H\nypotension\n•\n P\naralysis\n•\n S\neizures\n•\n Bleeding fr\nom wounds\nThe goal of managing snake bites is to limit the \nspread of the venom and the effects of venom on \nthe body. \n•\n I\nmmobilize the extremity. [See SKILLS]\n•\n Take a picture of the snake when possible and \nsend with the patient (for example, with the \npatient’s mobile phone).\n•\n Give IV fluids if evidence of shock. [See SKILLS]\n•\n These patients may have delayed shock or airway \nproblems. Monitor closely and plan early for \nrapid handover/transfer. \nVital signs should be checked at the end of the ABCDE\nA full set of vital signs (blood pressure, heart rate, respiratory rate, and oxygen saturation if available)",
+          "score": 0.6221106149369224
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 200; cleaned lines 11579-11592",
+          "text": "SKILLS\n192 192 192\nWOUND MANAGEMENT: SNAKE BITE BANDAGING AND \nIMMOBILIZATION\nNote: When possible, take a picture of the snake and send with the patient.\nImmobilizing a limb after a snake bite is important to reduce movement and absorption of venom.\n•\n Always assess pulses, capillary refill and sensation before and after dressing or splinting any wound. \n• You may choose to use a broad pressure bandage and wrap upwards from the lower portion \nof the bite. The bandage should be firm, but should not cut off pulses in the limb. Extend the \nbandage as high up the limb as possible.\n – This is recommended if the snakes in your area produce a toxin that damages the nerves, causes \nparalysis, causes the person to become very ill or if there will be prolonged transport time.\n – This is NOT recommended if the snakes in your area produce toxins that primarily cause tissue",
+          "score": 0.6108111738666265
+        }
+      ],
+      "warning": null,
+      "expected_pdf_pages": [
+        34
+      ],
+      "review_for": "Độ bao phủ các bước và điều kiện; trích dẫn đúng nguồn.",
+      "latency_seconds": 0.0147,
+      "capture_status": "success"
+    },
+    {
+      "id": "B05",
+      "question": "Tổng hợp cách xử trí co giật ở người lớn và trẻ em theo tài liệu.",
+      "answer": "- Bảo vệ người co giật khỏi ngã và các vật cứng hoặc sắc xung quanh [S1]\n- Không đặt bất kỳ vật gì vào miệng người co giật đang hoạt động ngoại trừ việc hút đường hô hấp [S1]\n- Cung cấp oxy [S1]\n- Kiểm tra đường huyết. Nếu <3.5 mmol/L, cung cấp đường [S1]\n- Sử dụng benzodiazepin [S2]\n- Nếu người phụ nữ mang thai hoặc mới sinh con, cung cấp magne sulphat [S2]\n- Nếu không có phản ứng, cung cấp liều benzodiazepin khác (nếu cần, lặp lại 3 lần) và theo dõi cho dấu hiệu hạ huyết áp và thở chậm [S2]\n- Xem xét đây là tình trạng nguy hiểm nếu người bệnh không tỉnh giữa các cơn co giật [S2]\n- Chuẩn bị chuyển giao/đưa nhanh đến chuyên gia cấp cứu nếu người bệnh không tỉnh giữa các cơn co giật [S2]\n- Nếu cơn co giật ngừng, đặt người bệnh ở tư thế phục hồi và theo dõi sát sao [S2]",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 33; cleaned lines 1734-1762",
+          "text": "seizures/convulsions\n•\n Confusion that \ngradually improves \nover minutes to hours\nThe goal in managing seizures/convulsions is to \nprevent hypoxia and injury. \n•\n Protect the seizing person from falls and from \nany hard or sharp objects nearby. \n•\n Do not place anything in the mouth of a person \nwith active seizure except to suction airway.  \n[See SKILLS]\n•\n Give oxygen. [See SKILLS] \n•\n Check blood Glucose. Give glucose if  \n<3.5 mmol/L. [See SKILLS]\n•\n Treat with a benzodiazepine [See SKILLS] and \nmonitor closely for slowing or difficult breathing. \n•\n Place patient in recovery position if there is no \ntrauma suspected. [See SKILLS]\n•\n If the patient is pregnant, or recently gave birth, \ngive magnesium sulphate. [See SKILLS]\nIf cause unknown, remember the possibility of trauma [See TRAUMA]",
+          "score": 0.9068557835521862
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 142; cleaned lines 7370-7394",
+          "text": "•\n Give a benzodiazepine.\n•\n If pregnant and seizing, give magnesium sulphate.\n•\n If no response, give another dose of benzodiazepine (repeat three times if needed) and monitor \nfor low blood pressure and slow breathing.\n•\n If the patient does not wake between seizure/convulsions, consider this a life-threatening \ncondition. Arrange for rapid handover/transfer to an advanced provider.\n•\n If the seizures/convulsions stop, place patient in recovery position and monitor closely.\nWorkbook question 4: Altered mental status\nUsing the workbook section above, list what you would do to manage these patients.\nCONDITION MANAGEMENT\nA 3-year-old child presents with \naltered mental status and a blood \nglucose of 2 mmol/L. 1. \n ____________________________________________\nA 25-\nyear-old woman is brought \nin with jerky movements and \nyou suspect an active seizure/\nconvulsion.\n1.",
+          "score": 0.4925613866685059
+        }
+      ],
+      "warning": null,
+      "expected_pdf_pages": [
+        33
+      ],
+      "review_for": "Không gộp hướng dẫn hai nhóm tuổi nếu nguồn không hỗ trợ; nêu rõ phần thiếu.",
+      "latency_seconds": 25.6914,
+      "capture_status": "success"
+    },
+    {
+      "id": "B06",
+      "question": "Tài liệu trình bày những bước đánh giá ban đầu người bệnh cấp cứu nào?",
+      "answer": "Các đoạn nguồn được truy xuất có nhắc đến cách tiếp cận ABCDE nhưng chưa chứa mô tả đủ cả năm phần; tôi không thể liệt kê đầy đủ chỉ từ các đoạn này. [S1] [S2]",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 48; cleaned lines 2355-2375",
+          "text": "Module 2: Approach to trauma\n40 40 40\nOverview\nGENERAL PRINCIPLES OF TRAUMA CARE\nEarly priorities for an injured person include managing airway and breathing emergencies, \ncontrolling bleeding, treating shock and immobilizing the spine if needed.\nThe goal of INITIAL ASSESSMENT is to identify life-threatening injuries.\nThe goal of ACUTE MANAGEMENT is to ensure oxygenation and perfusion, to control \npain and to plan ongoing care.\nThis module will guide you through the: \n • Approach to trauma\n • ABCDE: Trauma primary survey\n • DO: Important conditions to recognize and manage in the primary survey (signs, symptoms \nand management)\n • ASK: Key history findings (SAMPLE history)\n • CHECK: \nTrauma secondary survey\n • DO: Important conditions to recognize and manage based on the history and secondary\nsurvey (Signs, symptoms and management)\n • Special populations\n – Trauma in pregnancy",
+          "score": 0.9127418089176782
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 49; cleaned lines 2392-2421",
+          "text": "INTROABCDETRAUMABREATHINGSHOCKAMSSKILLSGLOSSARYREFS & QUICK CARDS\nPARTICIPANT WORKBOOK\n41 41\nABCDE: TRAUMA PRIMARY SURVEY\nThe ABCDE approach in injured patients is often also called the trauma primary survey. As \nfor all patients this should be conducted within the first 5 minutes and repeated whenever \nthe patient’s condition worsens. This trauma-specific ABCDE approach includes the initial \nassessment and management for all immediately life-threatening injuries. Always suspect \nhead and spine injury in a trauma patient with altered mental status. \nASSESSMENT IMMEDIATE MANAGEMENT\nAirway with \ncervical spine \nimmobilization\nA\nLook for:\n•\n blood\n, vomit, tongue or \nobjects obstructing the airway\n•\n burned nasal hairs or soot \naround the nose or mouth\n•\n head or neck trauma\n•\n neck haematoma (bleeding \nunder the skin)\n•\n altered mental status, as \nthis can affect the ability to",
+          "score": 0.7931028690916914
+        }
+      ],
+      "warning": "Nguồn truy xuất chưa bao phủ đủ nội dung ABCDE; không gọi mô hình để tránh suy diễn các bước còn thiếu.",
+      "expected_pdf_pages": [
+        48,
+        49
+      ],
+      "review_for": "Tìm được đúng nội dung tổng quan; giữ đúng thứ tự nếu tài liệu nêu thứ tự.",
+      "latency_seconds": 0.0228,
+      "capture_status": "success"
+    },
+    {
+      "id": "B07",
+      "question": "Tóm tắt các nội dung chính về bỏng trong tài liệu.",
+      "answer": "Chưa thể hiển thị câu trả lời đạt kiểm tra. Hãy đối chiếu trực tiếp các đoạn nguồn bên dưới.",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 52; cleaned lines 2700-2734",
+          "text": "Module 2: Approach to trauma\n44 44 44\nDO: IMPORTANT CONDITIONS TO RECOGNIZE AND MANAGE \nIN THE PRIMARY SURVEY\nA Airway conditions\nCONDITION SIGNS AND SYMPTOMS IN-DEPTH MANAGEMENT\nAirway \nobstruction\n• Visible blood\n, secretions,\nvomit, tongue or foreign\nbodies in the airway\n• Changes in voice\n• Abnormal sounds\nfrom the airway (such\nas stridor, snoring,\ngurgling)\n• Neck haematoma or\nburns to head and neck\n• Mental status changes\nleading to airway\nobstruction\n• Poor chest rise\n• Injury causing swelling\nof the airway (such as\nanaphylaxis or airway\nburn)\nHead and neck injuries may result in obstruction \nof the airway by blood, secretions, vomit, foreign \nbodies, or swelling. Penetrating wounds to \nthe neck can cause expanding haematomas. \nInhalational injuries due to burns can cause \nswelling.\n• Patients with a decreased level of consciousness\nmay not be able to protect their airways and",
+          "score": 0.5866222176549502
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 71; cleaned lines 4064-4094",
+          "text": "obstruction. \n•\n It is crucial to replace fluid loss and anticipate ongoing \nlosses. \n – In order to calculate the IV fluid requirements, it is \nimportant to determine the depth of the burn and the \npercentage of body surface area (BSA) that is burned. \n[See SKILLS] \n•\n Do not forget to give tetanus vaccination and pain relief \nfor burn injuries. \n•\n Remove all jewelry and elevate the burned limb if \npossible. \n•\n Burns are at high risk for infection, even with good care. \nClean and dress the wound carefully. [See SKILLS] \nBURNS REQUIRING RAPID HANDOVER/TRANSFER:\n•\n Serious burns to >15% of body [See SKILLS]\n•\n Burns involving the hands, face, groin area, joints, or \ncircumferential burns \n•\n Inhalation injury\n•\n Burns with other associated trauma\n•\n Any burn in very young or elderly people\n•\n Significant pre-burn illness (such as diabetes)",
+          "score": 0.498875387808534
+        }
+      ],
+      "warning": "Câu trả lời có ký tự ngoài tiếng Việt nên đã bị ẩn. Hãy đối chiếu đoạn nguồn bên dưới.",
+      "expected_pdf_pages": [
+        52
+      ],
+      "review_for": "Không làm phẳng hoặc diễn giải sơ đồ; nêu phạm vi nguồn truy xuất và các điểm được trích dẫn.",
+      "latency_seconds": 16.9012,
+      "capture_status": "success"
+    },
+    {
+      "id": "B08",
+      "question": "Theo tài liệu, cần đánh giá và xử trí người bệnh bị chảy máu như thế nào?",
+      "answer": "- Trong phần về sốc, tài liệu liệt kê kiểm soát chảy máu như một nội dung xử trí sốc. [S1]\n- Phần quản lý vết thương chung nêu dùng băng ép nếu vết thương vẫn chảy máu. [S2]\n- Các đoạn truy xuất này chưa đủ để mô tả cách đánh giá và xử trí mọi loại hoặc vị trí chảy máu; hãy nêu rõ bối cảnh để tra cứu đúng mục. [S1], [S2]",
+      "sources": [
+        {
+          "id": "S1",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 32; cleaned lines 1507-1552",
+          "text": "Module 1: The ABCDE and SAMPLE history approach\n24 24 24\nCIRCULATION conditions \nC\nCONDITION SIGNS AND SYMPTOMS IN-DEPTH DESCRIPTION AND MANAGEMENT\nPulselessness •\n No pulse\n•\n Unconscious\n•\n Not br\neathing\nFollow relevant cardiopulmonary resuscitation \n(CPR) protocols. \nShock •\n Rapid heart rate \n(tachycardia)\n•\n Rapid breathing \n(tachypnoea)\n•\n Pale and cool skin\n•\n Capillary refill>3 seconds\n•\n Sweating (diaphoresis)\n•\n May have dizziness, \nconfusion, altered mental \nstatus \n•\n May have hypotension \nPoor perfusion is the failure to deliver enough \noxygen-carrying blood to the vital organs. When \npoor perfusion continues until organ function is \naffected, this is called shock and can lead rapidly \nto death. \n•\n Initial treatment for shock includes laying the \npatient flat (if tolerated).\n•\n Give oxygen. [See SKILLS] \n•\n Control bleeding. [See SKILLS] \n•\n Start an IV and give IV fluids. [See SKILLS]",
+          "score": 0.6356625387998498
+        },
+        {
+          "id": "S2",
+          "source_id": "WHO_ICRC_BEC_2018",
+          "title": "Basic Emergency Care: Approach to the Acutely Ill and Injured",
+          "publishers": [
+            "World Health Organization",
+            "International Committee of the Red Cross"
+          ],
+          "publication_year": 2018,
+          "topics": [
+            "first_aid",
+            "emergency_care",
+            "acute_illness",
+            "injury_assessment"
+          ],
+          "citation": "Basic Emergency Care: Approach to the Acutely Ill and Injured — World Health Organization, International Committee of the Red Cross (2018); PDF p. 196; cleaned lines 11363-11382",
+          "text": "SKILLS\n188 188 188\n6. WOUND MANAGEMENT SKILL STATIONS  \nWOUND MANAGEMENT: GENERAL WOUND MANAGEMENT\n• Haemorrhage control: stop bleeding as above.\n•\n Prevent infection:\n – Clean wound of blood clots, dirt, dead or dying tissue, foreign bodies.\n – Clean skin around the wound thoroughly with soap and water or antiseptic.\n – Thoroughly wash out wound by flushing with at least 1 litre of clean water.\n • The water should be under pressure to thoroughly clean the wound. To create a high pressure \nstream, use a syringe (with 14 g needle or IV catheter attached) or poke a small hole in a clean \nbottle and squeeze the bottle. \n • Be sure to use the entire litre. \n – If not vaccinated or not up to date, give tetanus vaccination.\n•\n Dressing wounds:\n – Dress wound with sterile gauze if available.\n – Use a pressure dressing if the wound is still bleeding.\n – Check perfusion (capillary refill and/or distal pulses) and sensation beyond the wound before",
+          "score": 0.5071368140381869
+        }
+      ],
+      "warning": "Câu trả lời chỉ tóm tắt các nguyên tắc chung có trong những đoạn được truy xuất.",
+      "expected_pdf_pages": [],
+      "review_for": "Nhận ra cần thêm bối cảnh nếu câu hỏi quá rộng; không đưa khuyến nghị ngoài đoạn nguồn.",
+      "latency_seconds": 0.0048,
+      "capture_status": "success"
+    }
+  ],
+  "notice": "Raw application outputs only. These records have not been human-reviewed, rated, or clinically validated. Do not pass this file directly to tests.evaluate_answer_quality; review and annotate each record first."
+}
